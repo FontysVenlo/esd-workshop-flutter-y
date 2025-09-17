@@ -15,25 +15,9 @@ class ClimateApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Climate Diagrams',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        primarySwatch: Colors.blue,
-        useMaterial3: true,
-      ),
+      theme: ThemeData(primarySwatch: Colors.red, useMaterial3: true),
+      themeMode: ThemeMode.dark,
+      debugShowCheckedModeBanner: false,
       home: const ClimateHomePage(),
     );
   }
@@ -41,15 +25,6 @@ class ClimateApp extends StatelessWidget {
 
 class ClimateHomePage extends StatefulWidget {
   const ClimateHomePage({Key? key}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   @override
   State<ClimateHomePage> createState() => _ClimateHomePageState();
@@ -59,7 +34,7 @@ class _ClimateHomePageState extends State<ClimateHomePage> {
   bool isLoading = false;
   ClimateData? climateData;
   String selectedLocation = 'Brocken';
-  
+
   final Map<String, Map<String, double>> locations = {
     'Brocken': {'lat': 51.7992, 'lon': 10.6183},
     'Berlin': {'lat': 52.5200, 'lon': 13.4050},
@@ -80,13 +55,13 @@ class _ClimateHomePageState extends State<ClimateHomePage> {
     });
 
     final location = locations[selectedLocation]!;
-    
+
     // Using Open-Meteo API for historical weather data
     // We'll fetch data for the last complete year to calculate monthly averages
     final now = DateTime.now();
     final startDate = DateTime(now.year - 1, 1, 1);
     final endDate = DateTime(now.year - 1, 12, 31);
-    
+
     final url = Uri.parse(
       'https://archive-api.open-meteo.com/v1/era5?'
       'latitude=${location['lat']}&'
@@ -94,12 +69,12 @@ class _ClimateHomePageState extends State<ClimateHomePage> {
       'start_date=${DateFormat('yyyy-MM-dd').format(startDate)}&'
       'end_date=${DateFormat('yyyy-MM-dd').format(endDate)}&'
       'daily=temperature_2m_max,temperature_2m_min,precipitation_sum,windspeed_10m_max&'
-      'timezone=Europe/Berlin'
+      'timezone=Europe/Berlin',
     );
 
     try {
       final response = await http.get(url);
-      
+
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         setState(() {
@@ -113,13 +88,13 @@ class _ClimateHomePageState extends State<ClimateHomePage> {
       setState(() {
         isLoading = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error loading data: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error loading data: $e')));
     }
   }
 
-/* Build */
+  /* Build */
 
   @override
   Widget build(BuildContext context) {
@@ -151,83 +126,83 @@ class _ClimateHomePageState extends State<ClimateHomePage> {
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : climateData == null
-              ? const Center(child: Text('No data available'))
-              : SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
+          ? const Center(child: Text('No data available'))
+          : SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Row(
                       children: [
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: SizedBox(
-                                    height: 300,
-                                    child: TemperatureChart(
-                                      data: climateData!,
-                                      title: 'Höchst- und Tiefsttemperatur',
-                                    ),
-                                  ),
+                        Expanded(
+                          child: Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: SizedBox(
+                                height: 300,
+                                child: TemperatureChart(
+                                  data: climateData!,
+                                  title: 'Höchst- und Tiefsttemperatur',
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: SizedBox(
-                                    height: 300,
-                                    child: PrecipitationChart(
-                                      data: climateData!,
-                                      title: 'Niederschlagsmenge',
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
-                        const SizedBox(height: 16),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: SizedBox(
-                                    height: 300,
-                                    child: WindChart(
-                                      data: climateData!,
-                                      title: 'Mittlere Windstärke',
-                                    ),
-                                  ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: SizedBox(
+                                height: 300,
+                                child: PrecipitationChart(
+                                  data: climateData!,
+                                  title: 'Niederschlagsmenge',
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: Card(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: SizedBox(
-                                    height: 300,
-                                    child: CombinedClimateChart(
-                                      data: climateData!,
-                                      title: 'Klima-Übersicht',
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       ],
                     ),
-                  ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: SizedBox(
+                                height: 300,
+                                child: WindChart(
+                                  data: climateData!,
+                                  title: 'Mittlere Windstärke',
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: SizedBox(
+                                height: 300,
+                                child: CombinedClimateChart(
+                                  data: climateData!,
+                                  title: 'Klima-Übersicht',
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
+              ),
+            ),
     );
   }
 }
@@ -274,10 +249,24 @@ class ClimateData {
         }
       }
 
-      monthlyMax.add(maxForMonth.isEmpty ? 0 : maxForMonth.reduce((a, b) => a + b) / maxForMonth.length);
-      monthlyMin.add(minForMonth.isEmpty ? 0 : minForMonth.reduce((a, b) => a + b) / minForMonth.length);
-      monthlyPrecip.add(precipForMonth.isEmpty ? 0 : precipForMonth.reduce((a, b) => a + b));
-      monthlyWind.add(windForMonth.isEmpty ? 0 : windForMonth.reduce((a, b) => a + b) / windForMonth.length);
+      monthlyMax.add(
+        maxForMonth.isEmpty
+            ? 0
+            : maxForMonth.reduce((a, b) => a + b) / maxForMonth.length,
+      );
+      monthlyMin.add(
+        minForMonth.isEmpty
+            ? 0
+            : minForMonth.reduce((a, b) => a + b) / minForMonth.length,
+      );
+      monthlyPrecip.add(
+        precipForMonth.isEmpty ? 0 : precipForMonth.reduce((a, b) => a + b),
+      );
+      monthlyWind.add(
+        windForMonth.isEmpty
+            ? 0
+            : windForMonth.reduce((a, b) => a + b) / windForMonth.length,
+      );
     }
 
     return ClimateData(
@@ -293,16 +282,25 @@ class TemperatureChart extends StatelessWidget {
   final ClimateData data;
   final String title;
 
-  const TemperatureChart({
-    Key? key,
-    required this.data,
-    required this.title,
-  }) : super(key: key);
+  const TemperatureChart({Key? key, required this.data, required this.title})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final months = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 
-                   'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
+    final months = [
+      'Jan',
+      'Feb',
+      'Mär',
+      'Apr',
+      'Mai',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Okt',
+      'Nov',
+      'Dez',
+    ];
 
     return Column(
       children: [
@@ -313,26 +311,30 @@ class TemperatureChart extends StatelessWidget {
             LineChartData(
               gridData: FlGridData(show: true),
               titlesData: FlTitlesData(
-                leftTitlesData: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    reservedSize: 40,
-                  ),
+                leftTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: true, reservedSize: 40),
                 ),
-                bottomTitlesData: AxisTitles(
+                bottomTitles: AxisTitles(
                   sideTitles: SideTitles(
                     showTitles: true,
                     getTitlesWidget: (value, meta) {
                       if (value.toInt() >= 0 && value.toInt() < months.length) {
-                        return Text(months[value.toInt()], style: const TextStyle(fontSize: 10));
+                        return Text(
+                          months[value.toInt()],
+                          style: const TextStyle(fontSize: 10),
+                        );
                       }
                       return const Text('');
                     },
                     reservedSize: 30,
                   ),
                 ),
-                rightTitlesData: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                topTitlesData: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                rightTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                topTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
               ),
               borderData: FlBorderData(show: true),
               lineBarsData: [
@@ -383,16 +385,25 @@ class PrecipitationChart extends StatelessWidget {
   final ClimateData data;
   final String title;
 
-  const PrecipitationChart({
-    Key? key,
-    required this.data,
-    required this.title,
-  }) : super(key: key);
+  const PrecipitationChart({Key? key, required this.data, required this.title})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final months = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 
-                   'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
+    final months = [
+      'Jan',
+      'Feb',
+      'Mär',
+      'Apr',
+      'Mai',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Okt',
+      'Nov',
+      'Dez',
+    ];
 
     return Column(
       children: [
@@ -403,26 +414,30 @@ class PrecipitationChart extends StatelessWidget {
             BarChartData(
               gridData: FlGridData(show: true),
               titlesData: FlTitlesData(
-                leftTitlesData: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    reservedSize: 40,
-                  ),
+                leftTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: true, reservedSize: 40),
                 ),
-                bottomTitlesData: AxisTitles(
+                bottomTitles: AxisTitles(
                   sideTitles: SideTitles(
                     showTitles: true,
                     getTitlesWidget: (value, meta) {
                       if (value.toInt() >= 0 && value.toInt() < months.length) {
-                        return Text(months[value.toInt()], style: const TextStyle(fontSize: 10));
+                        return Text(
+                          months[value.toInt()],
+                          style: const TextStyle(fontSize: 10),
+                        );
                       }
                       return const Text('');
                     },
                     reservedSize: 30,
                   ),
                 ),
-                rightTitlesData: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                topTitlesData: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                rightTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                topTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
               ),
               borderData: FlBorderData(show: true),
               barGroups: data.monthlyPrecipitation.asMap().entries.map((e) {
@@ -449,16 +464,25 @@ class WindChart extends StatelessWidget {
   final ClimateData data;
   final String title;
 
-  const WindChart({
-    Key? key,
-    required this.data,
-    required this.title,
-  }) : super(key: key);
+  const WindChart({Key? key, required this.data, required this.title})
+    : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final months = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 
-                   'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
+    final months = [
+      'Jan',
+      'Feb',
+      'Mär',
+      'Apr',
+      'Mai',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Okt',
+      'Nov',
+      'Dez',
+    ];
 
     return Column(
       children: [
@@ -469,26 +493,30 @@ class WindChart extends StatelessWidget {
             BarChartData(
               gridData: FlGridData(show: true),
               titlesData: FlTitlesData(
-                leftTitlesData: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    reservedSize: 40,
-                  ),
+                leftTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: true, reservedSize: 40),
                 ),
-                bottomTitlesData: AxisTitles(
+                bottomTitles: AxisTitles(
                   sideTitles: SideTitles(
                     showTitles: true,
                     getTitlesWidget: (value, meta) {
                       if (value.toInt() >= 0 && value.toInt() < months.length) {
-                        return Text(months[value.toInt()], style: const TextStyle(fontSize: 10));
+                        return Text(
+                          months[value.toInt()],
+                          style: const TextStyle(fontSize: 10),
+                        );
                       }
                       return const Text('');
                     },
                     reservedSize: 30,
                   ),
                 ),
-                rightTitlesData: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                topTitlesData: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                rightTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
+                topTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
               ),
               borderData: FlBorderData(show: true),
               barGroups: data.monthlyWindSpeed.asMap().entries.map((e) {
@@ -523,8 +551,20 @@ class CombinedClimateChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final months = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 
-                   'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
+    final months = [
+      'Jan',
+      'Feb',
+      'Mär',
+      'Apr',
+      'Mai',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Okt',
+      'Nov',
+      'Dez',
+    ];
 
     return Column(
       children: [
@@ -535,31 +575,30 @@ class CombinedClimateChart extends StatelessWidget {
             LineChartData(
               gridData: FlGridData(show: true),
               titlesData: FlTitlesData(
-                leftTitlesData: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    reservedSize: 40,
-                  ),
+                leftTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: true, reservedSize: 40),
                 ),
-                rightTitlesData: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    reservedSize: 40,
-                  ),
+                rightTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: true, reservedSize: 40),
                 ),
-                bottomTitlesData: AxisTitles(
+                bottomTitles: AxisTitles(
                   sideTitles: SideTitles(
                     showTitles: true,
                     getTitlesWidget: (value, meta) {
                       if (value.toInt() >= 0 && value.toInt() < months.length) {
-                        return Text(months[value.toInt()], style: const TextStyle(fontSize: 10));
+                        return Text(
+                          months[value.toInt()],
+                          style: const TextStyle(fontSize: 10),
+                        );
                       }
                       return const Text('');
                     },
                     reservedSize: 30,
                   ),
                 ),
-                topTitlesData: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                topTitles: AxisTitles(
+                  sideTitles: SideTitles(showTitles: false),
+                ),
               ),
               borderData: FlBorderData(show: true),
               lineBarsData: [
@@ -575,7 +614,10 @@ class CombinedClimateChart extends StatelessWidget {
                 ),
                 LineChartBarData(
                   spots: data.monthlyPrecipitation.asMap().entries.map((e) {
-                    return FlSpot(e.key.toDouble(), e.value / 5); // Scale precipitation
+                    return FlSpot(
+                      e.key.toDouble(),
+                      e.value / 5,
+                    ); // Scale precipitation
                   }).toList(),
                   isCurved: false,
                   color: Colors.blue.shade300,
