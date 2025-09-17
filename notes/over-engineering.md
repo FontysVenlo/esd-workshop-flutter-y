@@ -1,0 +1,8 @@
+- GoRouter
+- l10n
+- flutter_it
+  - watch_it
+  - get_it
+  - command_it
+  - (listen_it)
+- follow Flutter architecture
