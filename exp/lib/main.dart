@@ -17,7 +17,7 @@ class ClimateApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Climate Diagrams',
-      debugShowCheckedModeBanner: false, // Disable debug banner
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
         useMaterial3: true,
@@ -47,12 +47,12 @@ class _ClimateHomePageState extends State<ClimateHomePage> {
   String selectedLocation = 'Brocken';
 
   Map<String, Map<String, double>> locations = {
-    'Fontys Venlo': {'lat': 51.3544, 'lon': 6.154031},
     'Brocken': {'lat': 51.7992, 'lon': 10.6183},
     'Berlin': {'lat': 52.5200, 'lon': 13.4050},
     'Munich': {'lat': 48.1351, 'lon': 11.5820},
     'Hamburg': {'lat': 53.5511, 'lon': 9.9937},
     'Frankfurt': {'lat': 50.1109, 'lon': 8.6821},
+    'Venlo': {'lat': 51.3544, 'lon': 6.154031},
   };
 
   final TextEditingController _nameController = TextEditingController();
@@ -307,11 +307,6 @@ class _ClimateHomePageState extends State<ClimateHomePage> {
                 padding: const EdgeInsets.all(24.0),
                 child: Column(
                   children: [
-                    Text(
-                      'Climate Diagram for $selectedLocation',
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
-                    const SizedBox(height: 24),
                     SizedBox(
                       height: 500,
                       width: MediaQuery.of(context).size.width * 0.85,
@@ -332,25 +327,40 @@ class _ClimateHomePageState extends State<ClimateHomePage> {
   }
 
   Widget _buildLegend() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        _buildLegendItem(Colors.red, 'Maximum Temperature'),
-        const SizedBox(width: 24),
-        _buildLegendItem(Colors.grey.shade600, 'Minimum Temperature'),
-        const SizedBox(width: 24),
-        Row(
-          children: [
-            Container(width: 20, height: 3, color: Colors.blue),
-            const SizedBox(width: 8),
-            const Text('Precipitation'),
-          ],
-        ),
-      ],
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _buildLegendItem(Colors.red.shade600, 'Maximum Temperature', Icons.thermostat),
+          _buildLegendItem(Colors.grey.shade600, 'Minimum Temperature', Icons.ac_unit),
+          Row(
+            children: [
+              Container(
+                width: 24,
+                height: 3,
+                decoration: BoxDecoration(
+                  color: Colors.blue.shade600,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              const SizedBox(width: 8),
+              const Icon(Icons.water_drop, color: Colors.blue, size: 16),
+              const SizedBox(width: 4),
+              const Text('Precipitation', style: TextStyle(fontWeight: FontWeight.w500)),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _buildLegendItem(Color color, String label) {
+  Widget _buildLegendItem(Color color, String label, IconData icon) {
     return Row(
       children: [
         Container(
@@ -358,11 +368,14 @@ class _ClimateHomePageState extends State<ClimateHomePage> {
           height: 12,
           decoration: BoxDecoration(
             color: color,
-            border: Border.all(color: Colors.black12),
+            borderRadius: BorderRadius.circular(2),
+            border: Border.all(color: Colors.grey.shade300),
           ),
         ),
         const SizedBox(width: 8),
-        Text(label),
+        Icon(icon, size: 16, color: color),
+        const SizedBox(width: 4),
+        Text(label, style: const TextStyle(fontWeight: FontWeight.w500)),
       ],
     );
   }
@@ -436,14 +449,13 @@ class CombinedClimateChart extends StatelessWidget {
     final maxPrecip = data.monthlyPrecipitation.reduce(math.max);
 
     // Calculate temperature range for axis - ensure it includes 0
-    final tempMin = math.min(minTemp - 5, -10).floorToDouble();
-    final tempMax = math.max(maxTemp + 5, 30).ceilToDouble();
+    final tempMin = math.min(minTemp - 5, -15).floorToDouble();
+    final tempMax = math.max(maxTemp + 5, 35).ceilToDouble();
 
-    // Dynamic precipitation scaling to ensure it never exceeds the frame
-    // Calculate ratio so that maxPrecip maps to tempMax (keeping 0mm = 0°C)
+    // Dynamic precipitation scaling
     final precipToTempRatio = maxPrecip > 0 ? maxPrecip / tempMax : 1.0;
 
-    // Create properly spaced bar groups
+    // Create side-by-side bar groups
     final List<BarChartGroupData> barGroups = [];
     for (int i = 0; i < 12; i++) {
       barGroups.add(
@@ -453,252 +465,289 @@ class CombinedClimateChart extends StatelessWidget {
             // Red bar for max temperature
             BarChartRodData(
               toY: data.monthlyMaxTemp[i],
-              color: Colors.red,
-              width: 20,
-              borderRadius: BorderRadius.zero,
+              color: Colors.red.shade600,
+              width: 16,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(2),
+                topRight: Radius.circular(2),
+              ),
             ),
             // Gray bar for min temperature
             BarChartRodData(
               toY: data.monthlyMinTemp[i],
               color: Colors.grey.shade600,
-              width: 20,
-              borderRadius: BorderRadius.zero,
+              width: 16,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(2),
+                topRight: Radius.circular(2),
+              ),
             ),
           ],
-          barsSpace: 2, // Small space between bars
+          barsSpace: 4, // Space between max/min bars
         ),
       );
     }
 
-    return Stack(
-      children: [
-        // Main chart with temperature bars
-        Padding(
-          padding: const EdgeInsets.only(right: 50.0),
-          child: BarChart(
-            BarChartData(
-              alignment: BarChartAlignment.spaceEvenly,
-              maxY: tempMax,
-              minY: tempMin,
-              groupsSpace: 12,
-              barTouchData: BarTouchData(
-                enabled: true,
-                touchTooltipData: BarTouchTooltipData(
-                  getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                    final month = months[group.x];
-                    final temp = rod.toY;
-                    final type = rodIndex == 0 ? 'Max' : 'Min';
-                    return BarTooltipItem(
-                      '$month\n$type: ${temp.toStringAsFixed(1)}°C',
-                      const TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    );
-                  },
-                ),
-              ),
-              titlesData: FlTitlesData(
-                show: true,
-                leftTitles: AxisTitles(
-                  // Removed axis title
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    interval: 5,
-                    reservedSize: 35,
-                    getTitlesWidget: (value, meta) {
-                      return Text(
-                        '${value.toInt()}°',
-                        style: const TextStyle(fontSize: 11),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.grey.shade200),
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Stack(
+        children: [
+          // Main chart with temperature bars
+          Padding(
+            padding: const EdgeInsets.only(right: 60.0, top: 10, bottom: 10),
+            child: BarChart(
+              BarChartData(
+                alignment: BarChartAlignment.spaceEvenly,
+                maxY: tempMax,
+                minY: tempMin,
+                groupsSpace: 8,
+                barTouchData: BarTouchData(
+                  enabled: true,
+                  touchTooltipData: BarTouchTooltipData(
+                    tooltipRoundedRadius: 8,
+                    tooltipPadding: const EdgeInsets.all(8),
+                    getTooltipItem: (group, groupIndex, rod, rodIndex) {
+                      final month = months[group.x];
+                      final temp = rod.toY;
+                      final type = rodIndex == 0 ? 'Max' : 'Min';
+                      return BarTooltipItem(
+                        '$month\n$type: ${temp.toStringAsFixed(1)}°C',
+                        const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                        ),
                       );
                     },
                   ),
                 ),
-                rightTitles: const AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
-                topTitles: const AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
-                bottomTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    reservedSize: 30,
-                    getTitlesWidget: (value, meta) {
-                      if (value.toInt() >= 0 && value.toInt() < 12) {
-                        return Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: Text(
-                            months[value.toInt()],
-                            style: const TextStyle(fontSize: 11),
+                titlesData: FlTitlesData(
+                  show: true,
+                  leftTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      interval: 5,
+                      reservedSize: 40,
+                      getTitlesWidget: (value, meta) {
+                        return Text(
+                          '${value.toInt()}°',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.grey.shade700,
+                            fontWeight: FontWeight.w500,
                           ),
                         );
-                      }
-                      return const Text('');
-                    },
-                  ),
-                ),
-              ),
-              gridData: FlGridData(
-                show: true,
-                drawVerticalLine: false,
-                horizontalInterval: 5,
-                getDrawingHorizontalLine: (value) {
-                  if (value == 0) {
-                    // Bold line at 0
-                    return FlLine(
-                      color: Colors.grey.shade600,
-                      strokeWidth: 1.5,
-                    );
-                  }
-                  return FlLine(
-                    color: Colors.grey.shade300,
-                    strokeWidth: 1,
-                    dashArray: [5, 5],
-                  );
-                },
-              ),
-              borderData: FlBorderData(
-                show: true,
-                border: Border(
-                  left: BorderSide(color: Colors.black, width: 1),
-                  bottom: BorderSide(color: Colors.black, width: 1),
-                  right: BorderSide.none,
-                  top: BorderSide.none,
-                ),
-              ),
-              barGroups: barGroups,
-            ),
-          ),
-        ),
-        // Precipitation line overlay - Fixed alignment
-        Positioned.fill(
-          child: Padding(
-            padding: const EdgeInsets.only(right: 50.0),
-            child: IgnorePointer(
-              child: LineChart(
-                LineChartData(
-                  minY: tempMin,
-                  maxY: tempMax,
-                  minX: -0.5, // Match the bar chart bounds
-                  maxX: 11.5,
-                  lineBarsData: [
-                    LineChartBarData(
-                      spots: List.generate(12, (index) {
-                        // Convert precipitation to temperature scale using dynamic ratio
-                        final precipValue = data.monthlyPrecipitation[index];
-                        final scaledValue = precipValue / precipToTempRatio;
-                        return FlSpot(index.toDouble(), scaledValue.clamp(tempMin, tempMax));
-                      }),
-                      isCurved: true,
-                      color: Colors.blue,
-                      barWidth: 3,
-                      isStrokeCapRound: true,
-                      dotData: const FlDotData(show: false),
-                      belowBarData: BarAreaData(
-                        show: false,
-                      ),
+                      },
                     ),
-                  ],
-                  titlesData: const FlTitlesData(show: false),
-                  gridData: const FlGridData(show: false),
-                  borderData: FlBorderData(show: false),
-                  lineTouchData: LineTouchData(
-                    enabled: true,
-                    touchTooltipData: LineTouchTooltipData(
-                      getTooltipItems: (touchedSpots) {
-                        return touchedSpots.map((spot) {
-                          final index = spot.x.toInt();
-                          if (index >= 0 && index < 12) {
-                            return LineTooltipItem(
-                              '${months[index]}\nPrecipitation: ${data.monthlyPrecipitation[index].toStringAsFixed(0)} mm',
-                              const TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
+                  ),
+                  rightTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  topTitles: const AxisTitles(
+                    sideTitles: SideTitles(showTitles: false),
+                  ),
+                  bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                      showTitles: true,
+                      reservedSize: 35,
+                      getTitlesWidget: (value, meta) {
+                        if (value.toInt() >= 0 && value.toInt() < 12) {
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 12.0),
+                            child: Text(
+                              months[value.toInt()],
+                              style: TextStyle(
+                                fontSize: 11,
+                                color: Colors.grey.shade700,
                                 fontWeight: FontWeight.w500,
                               ),
-                            );
-                          }
-                          return null;
-                        }).toList();
+                            ),
+                          );
+                        }
+                        return const Text('');
                       },
                     ),
                   ),
                 ),
+                gridData: FlGridData(
+                  show: true,
+                  drawVerticalLine: false,
+                  horizontalInterval: 5,
+                  getDrawingHorizontalLine: (value) {
+                    if (value == 0) {
+                      return FlLine(
+                        color: Colors.black87,
+                        strokeWidth: 1.5,
+                      );
+                    }
+                    return FlLine(
+                      color: Colors.grey.shade300,
+                      strokeWidth: 0.8,
+                      dashArray: [3, 3],
+                    );
+                  },
+                ),
+                borderData: FlBorderData(
+                  show: true,
+                  border: Border(
+                    left: BorderSide(color: Colors.grey.shade400, width: 1),
+                    bottom: BorderSide(color: Colors.grey.shade400, width: 1),
+                    right: BorderSide.none,
+                    top: BorderSide.none,
+                  ),
+                ),
+                barGroups: barGroups,
               ),
             ),
           ),
-        ),
-        // Right axis for precipitation - Dynamic scaling
-        Positioned(
-          right: 0,
-          top: 0,
-          bottom: 30,
-          child: Container(
-            width: 50,
-            decoration: BoxDecoration(
-              border: Border(
-                left: BorderSide(color: Colors.black, width: 1),
-              ),
-            ),
-            child: Column(
-              children: [
-                const Padding(
-                  padding: EdgeInsets.only(top: 8.0, bottom: 20.0),
-                  child: RotatedBox(
-                    quarterTurns: 3,
-                    child: Text(
-                      '',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Colors.blue,
+          // Enhanced precipitation line overlay
+          Positioned.fill(
+            child: Padding(
+              padding: const EdgeInsets.only(right: 60.0, top: 10, bottom: 10),
+              child: IgnorePointer(
+                child: LineChart(
+                  LineChartData(
+                    minY: tempMin,
+                    maxY: tempMax,
+                    minX: -0.5,
+                    maxX: 11.5,
+                    lineBarsData: [
+                      LineChartBarData(
+                        spots: List.generate(12, (index) {
+                          final precipValue = data.monthlyPrecipitation[index];
+                          final scaledValue = precipValue / precipToTempRatio;
+                          return FlSpot(index.toDouble(), scaledValue.clamp(tempMin, tempMax));
+                        }),
+                        isCurved: true,
+                        curveSmoothness: 0.3,
+                        color: Colors.blue.shade600,
+                        barWidth: 3,
+                        isStrokeCapRound: true,
+                        dotData: FlDotData(
+                          show: true,
+                          getDotPainter: (spot, percent, barData, index) {
+                            return FlDotCirclePainter(
+                              radius: 4,
+                              color: Colors.blue.shade600,
+                              strokeWidth: 2,
+                              strokeColor: Colors.white,
+                            );
+                          },
+                        ),
+                        belowBarData: BarAreaData(
+                          show: false,
+                          color: Colors.blue.shade100.withOpacity(0.3),
+                        ),
+                      ),
+                    ],
+                    titlesData: const FlTitlesData(show: false),
+                    gridData: const FlGridData(show: false),
+                    borderData: FlBorderData(show: false),
+                    lineTouchData: LineTouchData(
+                      enabled: true,
+                      touchTooltipData: LineTouchTooltipData(
+                        tooltipRoundedRadius: 8,
+                        tooltipPadding: const EdgeInsets.all(8),
+                        getTooltipItems: (touchedSpots) {
+                          return touchedSpots.map((spot) {
+                            final index = spot.x.toInt();
+                            if (index >= 0 && index < 12) {
+                              return LineTooltipItem(
+                                '${months[index]}\nPrecipitation: ${data.monthlyPrecipitation[index].toStringAsFixed(0)} mm',
+                                const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              );
+                            }
+                            return null;
+                          }).toList();
+                        },
                       ),
                     ),
                   ),
                 ),
-                Expanded(
-                  child: Container(
-                    padding: const EdgeInsets.only(left: 5, right: 2),
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
-                        final List<Widget> labels = [];
-                        final height = constraints.maxHeight;
+              ),
+            ),
+          ),
+          // Enhanced right axis for precipitation
+          Positioned(
+            right: 0,
+            top: 10,
+            bottom: 45,
+            child: Container(
+              width: 60,
+              decoration: BoxDecoration(
+                color: Colors.blue.shade50,
+                border: Border(
+                  left: BorderSide(color: Colors.blue.shade200, width: 1),
+                ),
+                borderRadius: const BorderRadius.only(
+                  topRight: Radius.circular(8),
+                  bottomRight: Radius.circular(8),
+                ),
+              ),
+              child: Column(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8.0),
+                    child: RotatedBox(
+                      quarterTurns: 3,
+                      child: Text(
+                        'Precipitation (mm)',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          final List<Widget> labels = [];
+                          final height = constraints.maxHeight;
 
-                        // Generate precipitation labels with dynamic scaling
-                        for (double temp = tempMax; temp >= tempMin; temp -= 5) {
-                          if (temp >= 0) { // Only show positive precipitation values
+                          for (double temp = tempMax; temp >= 0; temp -= 10) {
                             final precipValue = temp * precipToTempRatio;
                             final position = ((tempMax - temp) / (tempMax - tempMin)) * height;
 
                             labels.add(
                               Positioned(
-                                top: position - 7,
+                                top: position - 8,
+                                right: 4,
                                 child: Text(
                                   '${precipValue.toInt()}',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 10,
-                                    color: Colors.blue,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.blue.shade700,
                                   ),
                                 ),
                               ),
                             );
                           }
-                        }
 
-                        return Stack(
-                          children: labels,
-                        );
-                      },
+                          return Stack(children: labels);
+                        },
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
