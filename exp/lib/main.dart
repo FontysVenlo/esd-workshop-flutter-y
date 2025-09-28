@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import 'dart:math' as math;
+import 'dart:ui' as ui;
 
 void main() {
   runApp(const ClimateApp());
@@ -21,10 +22,10 @@ class ClimateApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         useMaterial3: true,
-        scaffoldBackgroundColor: const Color(0xFF1a237e), // Dark blue background
+        scaffoldBackgroundColor: const Color(0xFF1a237e),
         appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFF1a237e), // Dark blue header
-          foregroundColor: Colors.white, // White text
+          backgroundColor: Color(0xFF1a237e),
+          foregroundColor: Colors.white,
           iconTheme: IconThemeData(color: Colors.white),
           actionsIconTheme: IconThemeData(color: Colors.white),
         ),
@@ -257,11 +258,11 @@ class _ClimateHomePageState extends State<ClimateHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Climate Diagram for $selectedLocation'),
+        title: Text('Climate Diagram - $selectedLocation'),
         actions: [
           DropdownButton<String>(
             value: selectedLocation,
-            dropdownColor: const Color(0xFF1a237e), // Dark blue dropdown
+            dropdownColor: const Color(0xFF1a237e),
             style: const TextStyle(color: Colors.white),
             iconEnabledColor: Colors.white,
             items: locations.keys.map((String location) {
@@ -293,7 +294,7 @@ class _ClimateHomePageState extends State<ClimateHomePage> {
         ],
       ),
       body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator(color: Colors.white))
           : climateData == null
           ? const Center(child: Text('No data available', style: TextStyle(color: Colors.white)))
           : Center(
@@ -301,8 +302,11 @@ class _ClimateHomePageState extends State<ClimateHomePage> {
           child: Padding(
             padding: const EdgeInsets.all(24.0),
             child: Card(
-              elevation: 4,
-              color: Colors.white, // Keep card background white
+              elevation: 8,
+              color: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(24.0),
                 child: Column(
@@ -337,8 +341,8 @@ class _ClimateHomePageState extends State<ClimateHomePage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _buildLegendItem(Colors.red.shade600, 'Maximum Temperature', Icons.thermostat),
-          _buildLegendItem(Colors.grey.shade600, 'Minimum Temperature', Icons.ac_unit),
+          _buildLegendItem(Colors.red.shade600, 'Max Temperature', Icons.thermostat),
+          _buildLegendItem(Colors.grey.shade600, 'Min Temperature', Icons.ac_unit),
           Row(
             children: [
               Container(
@@ -448,12 +452,17 @@ class CombinedClimateChart extends StatelessWidget {
     final minTemp = allTemps.reduce(math.min);
     final maxPrecip = data.monthlyPrecipitation.reduce(math.max);
 
-    // Calculate temperature range for axis - ensure it includes 0
-    final tempMin = math.min(minTemp - 5, -15).floorToDouble();
-    final tempMax = math.max(maxTemp + 5, 35).ceilToDouble();
+    // Temperature range that ensures 0 is visible
+    final tempMin = math.min(minTemp - 5, 0).floorToDouble();
+    final tempMax = (maxTemp + 5).ceilToDouble();
 
-    // Dynamic precipitation scaling
-    final precipToTempRatio = maxPrecip > 0 ? maxPrecip / tempMax : 1.0;
+    // Calculate where 0 is positioned in the temperature scale
+    final zeroPosition = -tempMin / (tempMax - tempMin);
+
+    // Scale precipitation so that 0 aligns and max doesn't exceed frame
+    // Precipitation starts from 0 and goes up
+    final precipMax = maxPrecip * 1.1; // Add 10% padding
+    final precipScale = (tempMax - 0) / precipMax; // Scale factor to fit precipitation in the upper part
 
     // Create side-by-side bar groups
     final List<BarChartGroupData> barGroups = [];
@@ -483,23 +492,30 @@ class CombinedClimateChart extends StatelessWidget {
               ),
             ),
           ],
-          barsSpace: 4, // Space between max/min bars
+          barsSpace: 4,
         ),
       );
     }
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.grey.shade50,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey.shade200),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 5,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       child: Stack(
         children: [
           // Main chart with temperature bars
           Padding(
-            padding: const EdgeInsets.only(right: 60.0, top: 10, bottom: 10),
+            padding: const EdgeInsets.only(right: 65.0, top: 10, bottom: 10),
             child: BarChart(
               BarChartData(
                 alignment: BarChartAlignment.spaceEvenly,
@@ -515,8 +531,9 @@ class CombinedClimateChart extends StatelessWidget {
                       final month = months[group.x];
                       final temp = rod.toY;
                       final type = rodIndex == 0 ? 'Max' : 'Min';
+                      final precip = data.monthlyPrecipitation[group.x];
                       return BarTooltipItem(
-                        '$month\n$type: ${temp.toStringAsFixed(1)}°C',
+                        '$month\n$type: ${temp.toStringAsFixed(1)}°C\nPrecip: ${precip.toStringAsFixed(0)}mm',
                         const TextStyle(
                           color: Colors.white,
                           fontSize: 12,
@@ -531,15 +548,18 @@ class CombinedClimateChart extends StatelessWidget {
                   leftTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
-                      interval: 5,
-                      reservedSize: 40,
+                      interval: 10,
+                      reservedSize: 45,
                       getTitlesWidget: (value, meta) {
-                        return Text(
-                          '${value.toInt()}°',
-                          style: TextStyle(
-                            fontSize: 11,
-                            color: Colors.grey.shade700,
-                            fontWeight: FontWeight.w500,
+                        return Padding(
+                          padding: const EdgeInsets.only(right: 5.0),
+                          child: Text(
+                            '${value.toInt()}°C',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.grey.shade700,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         );
                       },
@@ -577,18 +597,18 @@ class CombinedClimateChart extends StatelessWidget {
                 gridData: FlGridData(
                   show: true,
                   drawVerticalLine: false,
-                  horizontalInterval: 5,
+                  horizontalInterval: 10,
                   getDrawingHorizontalLine: (value) {
                     if (value == 0) {
                       return FlLine(
                         color: Colors.black87,
-                        strokeWidth: 1.5,
+                        strokeWidth: 2,
                       );
                     }
                     return FlLine(
                       color: Colors.grey.shade300,
                       strokeWidth: 0.8,
-                      dashArray: [3, 3],
+                      dashArray: [5, 3],
                     );
                   },
                 ),
@@ -605,34 +625,35 @@ class CombinedClimateChart extends StatelessWidget {
               ),
             ),
           ),
-          // Enhanced precipitation line overlay
+          // Precipitation line overlay - properly aligned
           Positioned.fill(
             child: Padding(
-              padding: const EdgeInsets.only(right: 60.0, top: 10, bottom: 10),
+              padding: const EdgeInsets.only(right: 65.0, left: 45, top: 10, bottom: 45),
               child: IgnorePointer(
                 child: LineChart(
                   LineChartData(
                     minY: tempMin,
                     maxY: tempMax,
-                    minX: -0.5,
-                    maxX: 11.5,
+                    minX: 0,
+                    maxX: 11,
                     lineBarsData: [
                       LineChartBarData(
                         spots: List.generate(12, (index) {
                           final precipValue = data.monthlyPrecipitation[index];
-                          final scaledValue = precipValue / precipToTempRatio;
-                          return FlSpot(index.toDouble(), scaledValue.clamp(tempMin, tempMax));
+                          // Scale precipitation to fit in the chart, starting from 0
+                          final scaledValue = precipValue * precipScale;
+                          return FlSpot(index.toDouble(), scaledValue);
                         }),
                         isCurved: true,
-                        curveSmoothness: 0.3,
+                        curveSmoothness: 0.35,
                         color: Colors.blue.shade600,
-                        barWidth: 3,
+                        barWidth: 3.5,
                         isStrokeCapRound: true,
                         dotData: FlDotData(
                           show: true,
                           getDotPainter: (spot, percent, barData, index) {
                             return FlDotCirclePainter(
-                              radius: 4,
+                              radius: 4.5,
                               color: Colors.blue.shade600,
                               strokeWidth: 2,
                               strokeColor: Colors.white,
@@ -640,109 +661,45 @@ class CombinedClimateChart extends StatelessWidget {
                           },
                         ),
                         belowBarData: BarAreaData(
-                          show: false,
-                          color: Colors.blue.shade100.withOpacity(0.3),
+                          show: true,
+                          color: Colors.blue.shade50.withOpacity(0.3),
+                          cutOffY: 0,
+                          applyCutOffY: true,
                         ),
                       ),
                     ],
                     titlesData: const FlTitlesData(show: false),
                     gridData: const FlGridData(show: false),
                     borderData: FlBorderData(show: false),
-                    lineTouchData: LineTouchData(
-                      enabled: true,
-                      touchTooltipData: LineTouchTooltipData(
-                        tooltipRoundedRadius: 8,
-                        tooltipPadding: const EdgeInsets.all(8),
-                        getTooltipItems: (touchedSpots) {
-                          return touchedSpots.map((spot) {
-                            final index = spot.x.toInt();
-                            if (index >= 0 && index < 12) {
-                              return LineTooltipItem(
-                                '${months[index]}\nPrecipitation: ${data.monthlyPrecipitation[index].toStringAsFixed(0)} mm',
-                                const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              );
-                            }
-                            return null;
-                          }).toList();
-                        },
-                      ),
-                    ),
                   ),
                 ),
               ),
             ),
           ),
-          // Enhanced right axis for precipitation
+          // Right axis for precipitation with better spacing
           Positioned(
             right: 0,
             top: 10,
             bottom: 45,
             child: Container(
-              width: 60,
+              width: 65,
               decoration: BoxDecoration(
-                color: Colors.blue.shade50,
-                border: Border(
-                  left: BorderSide(color: Colors.blue.shade200, width: 1),
+                gradient: LinearGradient(
+                  colors: [Colors.blue.shade50.withOpacity(0.5), Colors.blue.shade50],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
                 ),
                 borderRadius: const BorderRadius.only(
-                  topRight: Radius.circular(8),
-                  bottomRight: Radius.circular(8),
+                  topRight: Radius.circular(12),
+                  bottomRight: Radius.circular(12),
                 ),
               ),
-              child: Column(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8.0),
-                    child: RotatedBox(
-                      quarterTurns: 3,
-                      child: Text(
-                        'Precipitation (mm)',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.blue,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 4),
-                      child: LayoutBuilder(
-                        builder: (context, constraints) {
-                          final List<Widget> labels = [];
-                          final height = constraints.maxHeight;
-
-                          for (double temp = tempMax; temp >= 0; temp -= 10) {
-                            final precipValue = temp * precipToTempRatio;
-                            final position = ((tempMax - temp) / (tempMax - tempMin)) * height;
-
-                            labels.add(
-                              Positioned(
-                                top: position - 8,
-                                right: 4,
-                                child: Text(
-                                  '${precipValue.toInt()}',
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.blue.shade700,
-                                  ),
-                                ),
-                              ),
-                            );
-                          }
-
-                          return Stack(children: labels);
-                        },
-                      ),
-                    ),
-                  ),
-                ],
+              child: CustomPaint(
+                painter: PrecipitationAxisPainter(
+                  maxPrecip: precipMax,
+                  tempMin: tempMin,
+                  tempMax: tempMax,
+                ),
               ),
             ),
           ),
@@ -750,4 +707,99 @@ class CombinedClimateChart extends StatelessWidget {
       ),
     );
   }
+}
+
+// Custom painter for precipitation axis to avoid text overlap
+class PrecipitationAxisPainter extends CustomPainter {
+  final double maxPrecip;
+  final double tempMin;
+  final double tempMax;
+
+  PrecipitationAxisPainter({
+    required this.maxPrecip,
+    required this.tempMin,
+    required this.tempMax,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final textStyle = TextStyle(
+      fontSize: 10,
+      color: Colors.blue.shade700,
+      fontWeight: FontWeight.w500,
+    );
+
+    // Draw vertical line
+    final linePaint = Paint()
+      ..color = Colors.blue.shade300
+      ..strokeWidth = 1;
+
+    canvas.drawLine(
+      Offset(0, 0),
+      Offset(0, size.height),
+      linePaint,
+    );
+
+    // Calculate 0 position
+    final zeroY = size.height * (tempMax / (tempMax - tempMin));
+
+    // Draw precipitation labels - ensure minimum spacing
+    final numLabels = 5;
+    final labelSpacing = size.height / (numLabels - 1);
+
+    for (int i = 0; i < numLabels; i++) {
+      final y = i * labelSpacing;
+
+      // Only draw labels above the 0 line
+      if (y <= zeroY) {
+        // Calculate corresponding precipitation value
+        final precipValue = maxPrecip * (1 - (y / zeroY));
+
+        final textSpan = TextSpan(
+          text: precipValue.toInt().toString(),
+          style: textStyle,
+        );
+
+        final textPainter = TextPainter(
+          text: textSpan,
+          textDirection: ui.TextDirection.ltr,
+        );
+
+        textPainter.layout();
+
+        // Position text with proper spacing from edge
+        textPainter.paint(
+          canvas,
+          Offset(8, y - textPainter.height / 2),
+        );
+
+        // Draw tick mark
+        canvas.drawLine(
+          Offset(0, y),
+          Offset(4, y),
+          linePaint,
+        );
+      }
+    }
+
+    // Draw "(mm)" label at top
+    final mmSpan = TextSpan(
+      text: '(mm)',
+      style: textStyle.copyWith(fontSize: 11, fontWeight: FontWeight.w600),
+    );
+
+    final mmPainter = TextPainter(
+      text: mmSpan,
+      textDirection: ui.TextDirection.ltr,
+    );
+
+    mmPainter.layout();
+    mmPainter.paint(
+      canvas,
+      Offset((size.width - mmPainter.width) / 2, 5),
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
