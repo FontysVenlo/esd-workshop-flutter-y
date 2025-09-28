@@ -1,4 +1,3 @@
-// main.dart
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -12,7 +11,7 @@ void main() {
 }
 
 class ClimateApp extends StatelessWidget {
-  const ClimateApp({Key? key}) : super(key: key);
+  const ClimateApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +35,7 @@ class ClimateApp extends StatelessWidget {
 }
 
 class ClimateHomePage extends StatefulWidget {
-  const ClimateHomePage({Key? key}) : super(key: key);
+  const ClimateHomePage({super.key});
 
   @override
   State<ClimateHomePage> createState() => _ClimateHomePageState();
@@ -45,7 +44,7 @@ class ClimateHomePage extends StatefulWidget {
 class _ClimateHomePageState extends State<ClimateHomePage> {
   bool isLoading = false;
   ClimateData? climateData;
-  String selectedLocation = 'Brocken';
+  String selectedLocation = 'Venlo';
 
   Map<String, Map<String, double>> locations = {
     'Brocken': {'lat': 51.7992, 'lon': 10.6183},
@@ -82,7 +81,6 @@ class _ClimateHomePageState extends State<ClimateHomePage> {
     });
 
     final location = locations[selectedLocation]!;
-
     final now = DateTime.now();
     final startDate = DateTime(now.year - 1, 1, 1);
     final endDate = DateTime(now.year - 1, 12, 31);
@@ -102,6 +100,7 @@ class _ClimateHomePageState extends State<ClimateHomePage> {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
+
         setState(() {
           climateData = ClimateData.fromJson(data);
           isLoading = false;
@@ -113,6 +112,7 @@ class _ClimateHomePageState extends State<ClimateHomePage> {
       setState(() {
         isLoading = false;
       });
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Error loading data: $e')),
@@ -341,8 +341,8 @@ class _ClimateHomePageState extends State<ClimateHomePage> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _buildLegendItem(Colors.red.shade600, 'Max Temperature', Icons.thermostat),
-          _buildLegendItem(Colors.grey.shade600, 'Min Temperature', Icons.ac_unit),
+          _buildLegendItem(Colors.red.shade600, 'Max Temperature (°C)', Icons.thermostat),
+          _buildLegendItem(Colors.grey.shade600, 'Min Temperature(°C)', Icons.ac_unit),
           Row(
             children: [
               Container(
@@ -356,7 +356,7 @@ class _ClimateHomePageState extends State<ClimateHomePage> {
               const SizedBox(width: 8),
               const Icon(Icons.water_drop, color: Colors.blue, size: 16),
               const SizedBox(width: 4),
-              const Text('Precipitation', style: TextStyle(fontWeight: FontWeight.w500)),
+              const Text('Precipitation (mm)', style: TextStyle(fontWeight: FontWeight.w500)),
             ],
           ),
         ],
@@ -437,41 +437,35 @@ class CombinedClimateChart extends StatelessWidget {
   final ClimateData data;
 
   const CombinedClimateChart({
-    Key? key,
+    super.key,
     required this.data,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
       'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-    // Calculate min/max values for proper scaling
     final allTemps = [...data.monthlyMaxTemp, ...data.monthlyMinTemp];
     final maxTemp = allTemps.reduce(math.max);
     final minTemp = allTemps.reduce(math.min);
     final maxPrecip = data.monthlyPrecipitation.reduce(math.max);
 
-    // Temperature range that ensures 0 is visible
-    final tempMin = math.min(minTemp - 5, 0).floorToDouble();
+    // Ensure 0°C line is visible
+    final tempMin = math.min(minTemp - 5, -5).floorToDouble();
     final tempMax = (maxTemp + 5).ceilToDouble();
 
-    // Calculate where 0 is positioned in the temperature scale
-    final zeroPosition = -tempMin / (tempMax - tempMin);
+    // Scale precipitation to fit chart
+    final precipScale = maxPrecip > 0
+        ? math.min(tempMax / maxPrecip, tempMax / 50)
+        : 1.0;
 
-    // Scale precipitation so that 0 aligns and max doesn't exceed frame
-    // Precipitation starts from 0 and goes up
-    final precipMax = maxPrecip * 1.1; // Add 10% padding
-    final precipScale = (tempMax - 0) / precipMax; // Scale factor to fit precipitation in the upper part
-
-    // Create side-by-side bar groups
     final List<BarChartGroupData> barGroups = [];
     for (int i = 0; i < 12; i++) {
       barGroups.add(
         BarChartGroupData(
           x: i,
           barRods: [
-            // Red bar for max temperature
             BarChartRodData(
               toY: data.monthlyMaxTemp[i],
               color: Colors.red.shade600,
@@ -481,7 +475,6 @@ class CombinedClimateChart extends StatelessWidget {
                 topRight: Radius.circular(2),
               ),
             ),
-            // Gray bar for min temperature
             BarChartRodData(
               toY: data.monthlyMinTemp[i],
               color: Colors.grey.shade600,
@@ -503,7 +496,7 @@ class CombinedClimateChart extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha:0.1),
             spreadRadius: 1,
             blurRadius: 5,
             offset: const Offset(0, 2),
@@ -513,7 +506,6 @@ class CombinedClimateChart extends StatelessWidget {
       padding: const EdgeInsets.all(20),
       child: Stack(
         children: [
-          // Main chart with temperature bars
           Padding(
             padding: const EdgeInsets.only(right: 65.0, top: 10, bottom: 10),
             child: BarChart(
@@ -554,7 +546,7 @@ class CombinedClimateChart extends StatelessWidget {
                         return Padding(
                           padding: const EdgeInsets.only(right: 5.0),
                           child: Text(
-                            '${value.toInt()}°C',
+                            '${value.toInt()}',
                             style: TextStyle(
                               fontSize: 11,
                               color: Colors.grey.shade700,
@@ -599,6 +591,7 @@ class CombinedClimateChart extends StatelessWidget {
                   drawVerticalLine: false,
                   horizontalInterval: 10,
                   getDrawingHorizontalLine: (value) {
+                    // Bold line at 0°C
                     if (value == 0) {
                       return FlLine(
                         color: Colors.black87,
@@ -625,7 +618,8 @@ class CombinedClimateChart extends StatelessWidget {
               ),
             ),
           ),
-          // Precipitation line overlay - properly aligned
+
+          // Precipitation line overlay
           Positioned.fill(
             child: Padding(
               padding: const EdgeInsets.only(right: 65.0, left: 45, top: 10, bottom: 45),
@@ -634,14 +628,13 @@ class CombinedClimateChart extends StatelessWidget {
                   LineChartData(
                     minY: tempMin,
                     maxY: tempMax,
-                    minX: 0,
-                    maxX: 11,
+                    minX: -0.5,
+                    maxX: 11.5,
                     lineBarsData: [
                       LineChartBarData(
                         spots: List.generate(12, (index) {
                           final precipValue = data.monthlyPrecipitation[index];
-                          // Scale precipitation to fit in the chart, starting from 0
-                          final scaledValue = precipValue * precipScale;
+                          final scaledValue = math.min(precipValue * precipScale, tempMax - 1);
                           return FlSpot(index.toDouble(), scaledValue);
                         }),
                         isCurved: true,
@@ -661,8 +654,8 @@ class CombinedClimateChart extends StatelessWidget {
                           },
                         ),
                         belowBarData: BarAreaData(
-                          show: true,
-                          color: Colors.blue.shade50.withOpacity(0.3),
+                          show: false, // Set to true to show filled area
+                          color: Colors.blue.shade50.withValues(alpha:0.3),
                           cutOffY: 0,
                           applyCutOffY: true,
                         ),
@@ -676,7 +669,8 @@ class CombinedClimateChart extends StatelessWidget {
               ),
             ),
           ),
-          // Right axis for precipitation with better spacing
+
+          // Right axis for precipitation scale
           Positioned(
             right: 0,
             top: 10,
@@ -685,7 +679,7 @@ class CombinedClimateChart extends StatelessWidget {
               width: 65,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [Colors.blue.shade50.withOpacity(0.5), Colors.blue.shade50],
+                  colors: [Colors.blue.shade50.withValues(alpha: 0.5), Colors.blue.shade50],
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                 ),
@@ -696,9 +690,10 @@ class CombinedClimateChart extends StatelessWidget {
               ),
               child: CustomPaint(
                 painter: PrecipitationAxisPainter(
-                  maxPrecip: precipMax,
+                  maxPrecip: maxPrecip,
                   tempMin: tempMin,
                   tempMax: tempMax,
+                  precipScale: precipScale,
                 ),
               ),
             ),
@@ -709,16 +704,17 @@ class CombinedClimateChart extends StatelessWidget {
   }
 }
 
-// Custom painter for precipitation axis to avoid text overlap
 class PrecipitationAxisPainter extends CustomPainter {
   final double maxPrecip;
   final double tempMin;
   final double tempMax;
+  final double precipScale;
 
   PrecipitationAxisPainter({
     required this.maxPrecip,
     required this.tempMin,
     required this.tempMax,
+    required this.precipScale,
   });
 
   @override
@@ -729,7 +725,6 @@ class PrecipitationAxisPainter extends CustomPainter {
       fontWeight: FontWeight.w500,
     );
 
-    // Draw vertical line
     final linePaint = Paint()
       ..color = Colors.blue.shade300
       ..strokeWidth = 1;
@@ -740,23 +735,20 @@ class PrecipitationAxisPainter extends CustomPainter {
       linePaint,
     );
 
-    // Calculate 0 position
     final zeroY = size.height * (tempMax / (tempMax - tempMin));
 
-    // Draw precipitation labels - ensure minimum spacing
-    final numLabels = 5;
-    final labelSpacing = size.height / (numLabels - 1);
+    final scaledMax = maxPrecip;
+    final interval = _calculateInterval(scaledMax);
 
-    for (int i = 0; i < numLabels; i++) {
-      final y = i * labelSpacing;
+    var currentValue = 0.0;
+    while (currentValue <= scaledMax) {
+      final scaledPrecipValue = currentValue * precipScale;
+      final yRatio = 1 - ((scaledPrecipValue + tempMax) / (tempMax - tempMin));
+      final y = size.height * yRatio;
 
-      // Only draw labels above the 0 line
-      if (y <= zeroY) {
-        // Calculate corresponding precipitation value
-        final precipValue = maxPrecip * (1 - (y / zeroY));
-
+      if (y >= 0 && y <= zeroY) {
         final textSpan = TextSpan(
-          text: precipValue.toInt().toString(),
+          text: currentValue.toInt().toString(),
           style: textStyle,
         );
 
@@ -767,37 +759,33 @@ class PrecipitationAxisPainter extends CustomPainter {
 
         textPainter.layout();
 
-        // Position text with proper spacing from edge
         textPainter.paint(
           canvas,
           Offset(8, y - textPainter.height / 2),
         );
 
-        // Draw tick mark
         canvas.drawLine(
           Offset(0, y),
           Offset(4, y),
           linePaint,
         );
       }
+
+      currentValue += interval;
+      if (currentValue > scaledMax && currentValue - interval < scaledMax) {
+        currentValue = scaledMax;
+      } else if (currentValue > scaledMax) {
+        break;
+      }
     }
+  }
 
-    // Draw "(mm)" label at top
-    final mmSpan = TextSpan(
-      text: '(mm)',
-      style: textStyle.copyWith(fontSize: 11, fontWeight: FontWeight.w600),
-    );
-
-    final mmPainter = TextPainter(
-      text: mmSpan,
-      textDirection: ui.TextDirection.ltr,
-    );
-
-    mmPainter.layout();
-    mmPainter.paint(
-      canvas,
-      Offset((size.width - mmPainter.width) / 2, 5),
-    );
+  double _calculateInterval(double maxValue) {
+    if (maxValue <= 50) return 10;
+    if (maxValue <= 100) return 20;
+    if (maxValue <= 200) return 25;
+    if (maxValue <= 500) return 50;
+    return 100;
   }
 
   @override
