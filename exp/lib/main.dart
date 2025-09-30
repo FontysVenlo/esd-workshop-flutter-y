@@ -86,13 +86,13 @@ class _ClimateHomePageState extends State<ClimateHomePage> {
     final endDate = DateTime(now.year - 1, 12, 31);
 
     final url = Uri.parse(
-        'https://archive-api.open-meteo.com/v1/era5?'
-            'latitude=${location['lat']}&'
-            'longitude=${location['lon']}&'
-            'start_date=${DateFormat('yyyy-MM-dd').format(startDate)}&'
-            'end_date=${DateFormat('yyyy-MM-dd').format(endDate)}&'
-            'daily=temperature_2m_max,temperature_2m_min,precipitation_sum&'
-            'timezone=Europe/Berlin'
+      'https://archive-api.open-meteo.com/v1/era5?'
+      'latitude=${location['lat']}&'
+      'longitude=${location['lon']}&'
+      'start_date=${DateFormat('yyyy-MM-dd').format(startDate)}&'
+      'end_date=${DateFormat('yyyy-MM-dd').format(endDate)}&'
+      'daily=temperature_2m_max,temperature_2m_min,precipitation_sum&'
+      'timezone=Europe/Berlin',
     );
 
     try {
@@ -114,9 +114,7 @@ class _ClimateHomePageState extends State<ClimateHomePage> {
       });
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error loading data: $e')),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error loading data: $e')));
       }
     }
   }
@@ -132,27 +130,18 @@ class _ClimateHomePageState extends State<ClimateHomePage> {
             children: [
               TextField(
                 controller: _nameController,
-                decoration: const InputDecoration(
-                  labelText: 'Location Name',
-                  hintText: 'e.g., Cologne',
-                ),
+                decoration: const InputDecoration(labelText: 'Location Name', hintText: 'e.g., Cologne'),
               ),
               const SizedBox(height: 16),
               TextField(
                 controller: _latController,
-                decoration: const InputDecoration(
-                  labelText: 'Latitude',
-                  hintText: 'e.g., 50.9375',
-                ),
+                decoration: const InputDecoration(labelText: 'Latitude', hintText: 'e.g., 50.9375'),
                 keyboardType: const TextInputType.numberWithOptions(decimal: true),
               ),
               const SizedBox(height: 16),
               TextField(
                 controller: _lonController,
-                decoration: const InputDecoration(
-                  labelText: 'Longitude',
-                  hintText: 'e.g., 6.9603',
-                ),
+                decoration: const InputDecoration(labelText: 'Longitude', hintText: 'e.g., 6.9603'),
                 keyboardType: const TextInputType.numberWithOptions(decimal: true),
               ),
             ],
@@ -184,9 +173,7 @@ class _ClimateHomePageState extends State<ClimateHomePage> {
                   Navigator.of(context).pop();
                   fetchClimateData();
                 } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Please enter valid data')),
-                  );
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please enter valid data')));
                 }
               },
               child: const Text('Add'),
@@ -199,9 +186,7 @@ class _ClimateHomePageState extends State<ClimateHomePage> {
 
   void _showRemoveLocationDialog() {
     if (locations.length <= 1) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Cannot remove the last location')),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Cannot remove the last location')));
       return;
     }
 
@@ -243,12 +228,7 @@ class _ClimateHomePageState extends State<ClimateHomePage> {
               ),
             ],
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Close'),
-            ),
-          ],
+          actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Close'))],
         );
       },
     );
@@ -280,11 +260,7 @@ class _ClimateHomePageState extends State<ClimateHomePage> {
               }
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.add_location),
-            onPressed: _showAddLocationDialog,
-            tooltip: 'Add Location',
-          ),
+          IconButton(icon: const Icon(Icons.add_location), onPressed: _showAddLocationDialog, tooltip: 'Add Location'),
           IconButton(
             icon: const Icon(Icons.remove_circle_outline),
             onPressed: _showRemoveLocationDialog,
@@ -296,37 +272,35 @@ class _ClimateHomePageState extends State<ClimateHomePage> {
       body: isLoading
           ? const Center(child: CircularProgressIndicator(color: Colors.white))
           : climateData == null
-          ? const Center(child: Text('No data available', style: TextStyle(color: Colors.white)))
+          ? const Center(
+              child: Text('No data available', style: TextStyle(color: Colors.white)),
+            )
           : Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Card(
-              elevation: 8,
-              color: Colors.white,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 500,
-                      width: MediaQuery.of(context).size.width * 0.85,
-                      child: CombinedClimateChart(
-                        data: climateData!,
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Card(
+                    elevation: 8,
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(24.0),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 500,
+                            width: MediaQuery.of(context).size.width * 0.85,
+                            child: CombinedClimateChart(data: climateData!),
+                          ),
+                          const SizedBox(height: 20),
+                          _buildLegend(),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    _buildLegend(),
-                  ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ),
-      ),
     );
   }
 
@@ -348,10 +322,7 @@ class _ClimateHomePageState extends State<ClimateHomePage> {
               Container(
                 width: 24,
                 height: 3,
-                decoration: BoxDecoration(
-                  color: Colors.blue.shade600,
-                  borderRadius: BorderRadius.circular(2),
-                ),
+                decoration: BoxDecoration(color: Colors.blue.shade600, borderRadius: BorderRadius.circular(2)),
               ),
               const SizedBox(width: 8),
               const Icon(Icons.water_drop, color: Colors.blue, size: 16),
@@ -390,11 +361,7 @@ class ClimateData {
   final List<double> monthlyMinTemp;
   final List<double> monthlyPrecipitation;
 
-  ClimateData({
-    required this.monthlyMaxTemp,
-    required this.monthlyMinTemp,
-    required this.monthlyPrecipitation,
-  });
+  ClimateData({required this.monthlyMaxTemp, required this.monthlyMinTemp, required this.monthlyPrecipitation});
 
   factory ClimateData.fromJson(Map<String, dynamic> json) {
     final daily = json['daily'];
@@ -402,14 +369,14 @@ class ClimateData {
     final minTemps = List<double>.from(daily['temperature_2m_min']);
     final precipitation = List<double>.from(daily['precipitation_sum']);
 
-    List<double> monthlyMax = [];
-    List<double> monthlyMin = [];
-    List<double> monthlyPrecip = [];
+    final List<double> monthlyMax = [];
+    final List<double> monthlyMin = [];
+    final List<double> monthlyPrecip = [];
 
     for (int month = 1; month <= 12; month++) {
-      List<double> maxForMonth = [];
-      List<double> minForMonth = [];
-      List<double> precipForMonth = [];
+      final List<double> maxForMonth = [];
+      final List<double> minForMonth = [];
+      final List<double> precipForMonth = [];
 
       for (int i = 0; i < maxTemps.length; i++) {
         final date = DateTime.parse(daily['time'][i]);
@@ -425,26 +392,18 @@ class ClimateData {
       monthlyPrecip.add(precipForMonth.isEmpty ? 0 : precipForMonth.reduce((a, b) => a + b));
     }
 
-    return ClimateData(
-      monthlyMaxTemp: monthlyMax,
-      monthlyMinTemp: monthlyMin,
-      monthlyPrecipitation: monthlyPrecip,
-    );
+    return ClimateData(monthlyMaxTemp: monthlyMax, monthlyMinTemp: monthlyMin, monthlyPrecipitation: monthlyPrecip);
   }
 }
 
 class CombinedClimateChart extends StatelessWidget {
   final ClimateData data;
 
-  const CombinedClimateChart({
-    super.key,
-    required this.data,
-  });
+  const CombinedClimateChart({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
-    final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    final months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
     final allTemps = [...data.monthlyMaxTemp, ...data.monthlyMinTemp];
     final maxTemp = allTemps.reduce(math.max);
@@ -456,9 +415,7 @@ class CombinedClimateChart extends StatelessWidget {
     final tempMax = (maxTemp + 5).ceilToDouble();
 
     // Scale precipitation to fit chart
-    final precipScale = maxPrecip > 0
-        ? math.min(tempMax / maxPrecip, tempMax / 50)
-        : 1.0;
+    final precipScale = maxPrecip > 0 ? math.min(tempMax / maxPrecip, tempMax / 50) : 1.0;
 
     final List<BarChartGroupData> barGroups = [];
     for (int i = 0; i < 12; i++) {
@@ -470,19 +427,13 @@ class CombinedClimateChart extends StatelessWidget {
               toY: data.monthlyMaxTemp[i],
               color: Colors.red.shade600,
               width: 16,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(2),
-                topRight: Radius.circular(2),
-              ),
+              borderRadius: const BorderRadius.only(topLeft: Radius.circular(2), topRight: Radius.circular(2)),
             ),
             BarChartRodData(
               toY: data.monthlyMinTemp[i],
               color: Colors.grey.shade600,
               width: 16,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(2),
-                topRight: Radius.circular(2),
-              ),
+              borderRadius: const BorderRadius.only(topLeft: Radius.circular(2), topRight: Radius.circular(2)),
             ),
           ],
           barsSpace: 4,
@@ -496,7 +447,7 @@ class CombinedClimateChart extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withValues(alpha:0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 5,
             offset: const Offset(0, 2),
@@ -526,11 +477,7 @@ class CombinedClimateChart extends StatelessWidget {
                       final precip = data.monthlyPrecipitation[group.x];
                       return BarTooltipItem(
                         '$month\n$type: ${temp.toStringAsFixed(1)}°C\nPrecip: ${precip.toStringAsFixed(0)}mm',
-                        const TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                        ),
+                        const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w500),
                       );
                     },
                   ),
@@ -547,22 +494,14 @@ class CombinedClimateChart extends StatelessWidget {
                           padding: const EdgeInsets.only(right: 5.0),
                           child: Text(
                             '${value.toInt()}',
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.grey.shade700,
-                              fontWeight: FontWeight.w500,
-                            ),
+                            style: TextStyle(fontSize: 11, color: Colors.grey.shade700, fontWeight: FontWeight.w500),
                           ),
                         );
                       },
                     ),
                   ),
-                  rightTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
-                  topTitles: const AxisTitles(
-                    sideTitles: SideTitles(showTitles: false),
-                  ),
+                  rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                   bottomTitles: AxisTitles(
                     sideTitles: SideTitles(
                       showTitles: true,
@@ -573,11 +512,7 @@ class CombinedClimateChart extends StatelessWidget {
                             padding: const EdgeInsets.only(top: 12.0),
                             child: Text(
                               months[value.toInt()],
-                              style: TextStyle(
-                                fontSize: 11,
-                                color: Colors.grey.shade700,
-                                fontWeight: FontWeight.w500,
-                              ),
+                              style: TextStyle(fontSize: 11, color: Colors.grey.shade700, fontWeight: FontWeight.w500),
                             ),
                           );
                         }
@@ -593,16 +528,9 @@ class CombinedClimateChart extends StatelessWidget {
                   getDrawingHorizontalLine: (value) {
                     // Bold line at 0°C
                     if (value == 0) {
-                      return FlLine(
-                        color: Colors.black87,
-                        strokeWidth: 2,
-                      );
+                      return const FlLine(color: Colors.black87, strokeWidth: 2);
                     }
-                    return FlLine(
-                      color: Colors.grey.shade300,
-                      strokeWidth: 0.8,
-                      dashArray: [5, 3],
-                    );
+                    return FlLine(color: Colors.grey.shade300, strokeWidth: 0.8, dashArray: [5, 3]);
                   },
                 ),
                 borderData: FlBorderData(
@@ -655,7 +583,7 @@ class CombinedClimateChart extends StatelessWidget {
                         ),
                         belowBarData: BarAreaData(
                           show: false, // Set to true to show filled area
-                          color: Colors.blue.shade50.withValues(alpha:0.3),
+                          color: Colors.blue.shade50.withValues(alpha: 0.3),
                           cutOffY: 0,
                           applyCutOffY: true,
                         ),
@@ -683,10 +611,7 @@ class CombinedClimateChart extends StatelessWidget {
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                 ),
-                borderRadius: const BorderRadius.only(
-                  topRight: Radius.circular(12),
-                  bottomRight: Radius.circular(12),
-                ),
+                borderRadius: const BorderRadius.only(topRight: Radius.circular(12), bottomRight: Radius.circular(12)),
               ),
               child: CustomPaint(
                 painter: PrecipitationAxisPainter(
@@ -719,21 +644,13 @@ class PrecipitationAxisPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final textStyle = TextStyle(
-      fontSize: 10,
-      color: Colors.blue.shade700,
-      fontWeight: FontWeight.w500,
-    );
+    final textStyle = TextStyle(fontSize: 10, color: Colors.blue.shade700, fontWeight: FontWeight.w500);
 
     final linePaint = Paint()
       ..color = Colors.blue.shade300
       ..strokeWidth = 1;
 
-    canvas.drawLine(
-      Offset(0, 0),
-      Offset(0, size.height),
-      linePaint,
-    );
+    canvas.drawLine(const Offset(0, 0), Offset(0, size.height), linePaint);
 
     final zeroY = size.height * (tempMax / (tempMax - tempMin));
 
@@ -747,28 +664,15 @@ class PrecipitationAxisPainter extends CustomPainter {
       final y = size.height * yRatio;
 
       if (y >= 0 && y <= zeroY) {
-        final textSpan = TextSpan(
-          text: currentValue.toInt().toString(),
-          style: textStyle,
-        );
+        final textSpan = TextSpan(text: currentValue.toInt().toString(), style: textStyle);
 
-        final textPainter = TextPainter(
-          text: textSpan,
-          textDirection: ui.TextDirection.ltr,
-        );
+        final textPainter = TextPainter(text: textSpan, textDirection: ui.TextDirection.ltr);
 
         textPainter.layout();
 
-        textPainter.paint(
-          canvas,
-          Offset(8, y - textPainter.height / 2),
-        );
+        textPainter.paint(canvas, Offset(8, y - textPainter.height / 2));
 
-        canvas.drawLine(
-          Offset(0, y),
-          Offset(4, y),
-          linePaint,
-        );
+        canvas.drawLine(Offset(0, y), Offset(4, y), linePaint);
       }
 
       currentValue += interval;
