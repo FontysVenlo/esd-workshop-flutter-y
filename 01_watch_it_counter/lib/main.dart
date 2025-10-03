@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatelessWidget with WatchItMixin {
   const MyHomePage({super.key, required this.title});
 
   final String title;
