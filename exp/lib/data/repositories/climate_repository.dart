@@ -1,5 +1,4 @@
 import 'package:fpdart/fpdart.dart' show Either;
-import 'package:watch_it/watch_it.dart' show sl;
 
 import '../services/api/api_client.dart';
 import '../services/api/model/weather_api_model.dart';
@@ -9,8 +8,12 @@ abstract class ClimateRepository {
 }
 
 class ClimateRepositoryImpl implements ClimateRepository {
+  ClimateRepositoryImpl({required ApiClient apiClient}) : _apiClient = apiClient;
+
+  final ApiClient _apiClient;
+
   @override
   Future<Either<String, WeatherApiModel>> getWeather(double latitude, double longitude) {
-    return sl<ApiClient>().fetchWeather(latitude, longitude);
+    return _apiClient.fetchWeather(latitude, longitude);
   }
 }

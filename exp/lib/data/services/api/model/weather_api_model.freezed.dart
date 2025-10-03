@@ -18,12 +18,12 @@ mixin _$WeatherApiModel {
 /// The latitude of the location.
  double get latitude;/// The longitude of the location.
  double get longitude;/// The generation time of the data in milliseconds.
- double get generationTimeMs;/// The UTC offset in seconds.
- int get utcOffsetSeconds;/// The timezone of the location.
+@JsonKey(name: 'generationtime_ms') double get generationTimeMs;/// The UTC offset in seconds.
+@JsonKey(name: 'utc_offset_seconds') int get utcOffsetSeconds;/// The timezone of the location.
  String get timezone;/// The abbreviation of the timezone.
- String get timezoneAbbreviation;/// The elevation used for statistical downscaling.
+@JsonKey(name: 'timezone_abbreviation') String get timezoneAbbreviation;/// The elevation used for statistical downscaling.
  double get elevation;/// The units of the daily data.
- DailyUnits get dailyUnits;/// The daily weather data.
+@JsonKey(name: 'daily_units') DailyUnits get dailyUnits;/// The daily weather data.
  Daily get daily;
 /// Create a copy of WeatherApiModel
 /// with the given fields replaced by the non-null parameter values.
@@ -57,7 +57,7 @@ abstract mixin class $WeatherApiModelCopyWith<$Res>  {
   factory $WeatherApiModelCopyWith(WeatherApiModel value, $Res Function(WeatherApiModel) _then) = _$WeatherApiModelCopyWithImpl;
 @useResult
 $Res call({
- double latitude, double longitude, double generationTimeMs, int utcOffsetSeconds, String timezone, String timezoneAbbreviation, double elevation, DailyUnits dailyUnits, Daily daily
+ double latitude, double longitude,@JsonKey(name: 'generationtime_ms') double generationTimeMs,@JsonKey(name: 'utc_offset_seconds') int utcOffsetSeconds, String timezone,@JsonKey(name: 'timezone_abbreviation') String timezoneAbbreviation, double elevation,@JsonKey(name: 'daily_units') DailyUnits dailyUnits, Daily daily
 });
 
 
@@ -188,7 +188,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double latitude,  double longitude,  double generationTimeMs,  int utcOffsetSeconds,  String timezone,  String timezoneAbbreviation,  double elevation,  DailyUnits dailyUnits,  Daily daily)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double latitude,  double longitude, @JsonKey(name: 'generationtime_ms')  double generationTimeMs, @JsonKey(name: 'utc_offset_seconds')  int utcOffsetSeconds,  String timezone, @JsonKey(name: 'timezone_abbreviation')  String timezoneAbbreviation,  double elevation, @JsonKey(name: 'daily_units')  DailyUnits dailyUnits,  Daily daily)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _WeatherApiModel() when $default != null:
 return $default(_that.latitude,_that.longitude,_that.generationTimeMs,_that.utcOffsetSeconds,_that.timezone,_that.timezoneAbbreviation,_that.elevation,_that.dailyUnits,_that.daily);case _:
@@ -209,7 +209,7 @@ return $default(_that.latitude,_that.longitude,_that.generationTimeMs,_that.utcO
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double latitude,  double longitude,  double generationTimeMs,  int utcOffsetSeconds,  String timezone,  String timezoneAbbreviation,  double elevation,  DailyUnits dailyUnits,  Daily daily)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double latitude,  double longitude, @JsonKey(name: 'generationtime_ms')  double generationTimeMs, @JsonKey(name: 'utc_offset_seconds')  int utcOffsetSeconds,  String timezone, @JsonKey(name: 'timezone_abbreviation')  String timezoneAbbreviation,  double elevation, @JsonKey(name: 'daily_units')  DailyUnits dailyUnits,  Daily daily)  $default,) {final _that = this;
 switch (_that) {
 case _WeatherApiModel():
 return $default(_that.latitude,_that.longitude,_that.generationTimeMs,_that.utcOffsetSeconds,_that.timezone,_that.timezoneAbbreviation,_that.elevation,_that.dailyUnits,_that.daily);case _:
@@ -229,7 +229,7 @@ return $default(_that.latitude,_that.longitude,_that.generationTimeMs,_that.utcO
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double latitude,  double longitude,  double generationTimeMs,  int utcOffsetSeconds,  String timezone,  String timezoneAbbreviation,  double elevation,  DailyUnits dailyUnits,  Daily daily)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double latitude,  double longitude, @JsonKey(name: 'generationtime_ms')  double generationTimeMs, @JsonKey(name: 'utc_offset_seconds')  int utcOffsetSeconds,  String timezone, @JsonKey(name: 'timezone_abbreviation')  String timezoneAbbreviation,  double elevation, @JsonKey(name: 'daily_units')  DailyUnits dailyUnits,  Daily daily)?  $default,) {final _that = this;
 switch (_that) {
 case _WeatherApiModel() when $default != null:
 return $default(_that.latitude,_that.longitude,_that.generationTimeMs,_that.utcOffsetSeconds,_that.timezone,_that.timezoneAbbreviation,_that.elevation,_that.dailyUnits,_that.daily);case _:
@@ -244,7 +244,7 @@ return $default(_that.latitude,_that.longitude,_that.generationTimeMs,_that.utcO
 @JsonSerializable()
 
 class _WeatherApiModel implements WeatherApiModel {
-  const _WeatherApiModel({required this.latitude, required this.longitude, required this.generationTimeMs, required this.utcOffsetSeconds, required this.timezone, required this.timezoneAbbreviation, required this.elevation, required this.dailyUnits, required this.daily});
+  const _WeatherApiModel({required this.latitude, required this.longitude, @JsonKey(name: 'generationtime_ms') required this.generationTimeMs, @JsonKey(name: 'utc_offset_seconds') required this.utcOffsetSeconds, required this.timezone, @JsonKey(name: 'timezone_abbreviation') required this.timezoneAbbreviation, required this.elevation, @JsonKey(name: 'daily_units') required this.dailyUnits, required this.daily});
   factory _WeatherApiModel.fromJson(Map<String, dynamic> json) => _$WeatherApiModelFromJson(json);
 
 /// The latitude of the location.
@@ -252,17 +252,17 @@ class _WeatherApiModel implements WeatherApiModel {
 /// The longitude of the location.
 @override final  double longitude;
 /// The generation time of the data in milliseconds.
-@override final  double generationTimeMs;
+@override@JsonKey(name: 'generationtime_ms') final  double generationTimeMs;
 /// The UTC offset in seconds.
-@override final  int utcOffsetSeconds;
+@override@JsonKey(name: 'utc_offset_seconds') final  int utcOffsetSeconds;
 /// The timezone of the location.
 @override final  String timezone;
 /// The abbreviation of the timezone.
-@override final  String timezoneAbbreviation;
+@override@JsonKey(name: 'timezone_abbreviation') final  String timezoneAbbreviation;
 /// The elevation used for statistical downscaling.
 @override final  double elevation;
 /// The units of the daily data.
-@override final  DailyUnits dailyUnits;
+@override@JsonKey(name: 'daily_units') final  DailyUnits dailyUnits;
 /// The daily weather data.
 @override final  Daily daily;
 
@@ -299,7 +299,7 @@ abstract mixin class _$WeatherApiModelCopyWith<$Res> implements $WeatherApiModel
   factory _$WeatherApiModelCopyWith(_WeatherApiModel value, $Res Function(_WeatherApiModel) _then) = __$WeatherApiModelCopyWithImpl;
 @override @useResult
 $Res call({
- double latitude, double longitude, double generationTimeMs, int utcOffsetSeconds, String timezone, String timezoneAbbreviation, double elevation, DailyUnits dailyUnits, Daily daily
+ double latitude, double longitude,@JsonKey(name: 'generationtime_ms') double generationTimeMs,@JsonKey(name: 'utc_offset_seconds') int utcOffsetSeconds, String timezone,@JsonKey(name: 'timezone_abbreviation') String timezoneAbbreviation, double elevation,@JsonKey(name: 'daily_units') DailyUnits dailyUnits, Daily daily
 });
 
 
@@ -358,9 +358,9 @@ mixin _$DailyUnits {
 
 /// The date
  String get time;/// The unit for the maximum temperature at 2 meters above ground level.
- String get temperature2mMax;/// The unit for the minimum temperature at 2 meters above ground level.
- String get temperature2mMin;/// The unit for the sum of daily precipitation (including rain, showers and snowfall).
- String get precipitationSum;
+@JsonKey(name: 'temperature_2m_max') String get temperature2mMax;/// The unit for the minimum temperature at 2 meters above ground level.
+@JsonKey(name: 'temperature_2m_min') String get temperature2mMin;/// The unit for the sum of daily precipitation (including rain, showers and snowfall).
+@JsonKey(name: 'precipitation_sum') String get precipitationSum;
 /// Create a copy of DailyUnits
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -393,7 +393,7 @@ abstract mixin class $DailyUnitsCopyWith<$Res>  {
   factory $DailyUnitsCopyWith(DailyUnits value, $Res Function(DailyUnits) _then) = _$DailyUnitsCopyWithImpl;
 @useResult
 $Res call({
- String time, String temperature2mMax, String temperature2mMin, String precipitationSum
+ String time,@JsonKey(name: 'temperature_2m_max') String temperature2mMax,@JsonKey(name: 'temperature_2m_min') String temperature2mMin,@JsonKey(name: 'precipitation_sum') String precipitationSum
 });
 
 
@@ -501,7 +501,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String time,  String temperature2mMax,  String temperature2mMin,  String precipitationSum)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String time, @JsonKey(name: 'temperature_2m_max')  String temperature2mMax, @JsonKey(name: 'temperature_2m_min')  String temperature2mMin, @JsonKey(name: 'precipitation_sum')  String precipitationSum)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DailyUnits() when $default != null:
 return $default(_that.time,_that.temperature2mMax,_that.temperature2mMin,_that.precipitationSum);case _:
@@ -522,7 +522,7 @@ return $default(_that.time,_that.temperature2mMax,_that.temperature2mMin,_that.p
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String time,  String temperature2mMax,  String temperature2mMin,  String precipitationSum)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String time, @JsonKey(name: 'temperature_2m_max')  String temperature2mMax, @JsonKey(name: 'temperature_2m_min')  String temperature2mMin, @JsonKey(name: 'precipitation_sum')  String precipitationSum)  $default,) {final _that = this;
 switch (_that) {
 case _DailyUnits():
 return $default(_that.time,_that.temperature2mMax,_that.temperature2mMin,_that.precipitationSum);case _:
@@ -542,7 +542,7 @@ return $default(_that.time,_that.temperature2mMax,_that.temperature2mMin,_that.p
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String time,  String temperature2mMax,  String temperature2mMin,  String precipitationSum)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String time, @JsonKey(name: 'temperature_2m_max')  String temperature2mMax, @JsonKey(name: 'temperature_2m_min')  String temperature2mMin, @JsonKey(name: 'precipitation_sum')  String precipitationSum)?  $default,) {final _that = this;
 switch (_that) {
 case _DailyUnits() when $default != null:
 return $default(_that.time,_that.temperature2mMax,_that.temperature2mMin,_that.precipitationSum);case _:
@@ -557,17 +557,17 @@ return $default(_that.time,_that.temperature2mMax,_that.temperature2mMin,_that.p
 @JsonSerializable()
 
 class _DailyUnits implements DailyUnits {
-  const _DailyUnits({required this.time, required this.temperature2mMax, required this.temperature2mMin, required this.precipitationSum});
+  const _DailyUnits({required this.time, @JsonKey(name: 'temperature_2m_max') required this.temperature2mMax, @JsonKey(name: 'temperature_2m_min') required this.temperature2mMin, @JsonKey(name: 'precipitation_sum') required this.precipitationSum});
   factory _DailyUnits.fromJson(Map<String, dynamic> json) => _$DailyUnitsFromJson(json);
 
 /// The date
 @override final  String time;
 /// The unit for the maximum temperature at 2 meters above ground level.
-@override final  String temperature2mMax;
+@override@JsonKey(name: 'temperature_2m_max') final  String temperature2mMax;
 /// The unit for the minimum temperature at 2 meters above ground level.
-@override final  String temperature2mMin;
+@override@JsonKey(name: 'temperature_2m_min') final  String temperature2mMin;
 /// The unit for the sum of daily precipitation (including rain, showers and snowfall).
-@override final  String precipitationSum;
+@override@JsonKey(name: 'precipitation_sum') final  String precipitationSum;
 
 /// Create a copy of DailyUnits
 /// with the given fields replaced by the non-null parameter values.
@@ -602,7 +602,7 @@ abstract mixin class _$DailyUnitsCopyWith<$Res> implements $DailyUnitsCopyWith<$
   factory _$DailyUnitsCopyWith(_DailyUnits value, $Res Function(_DailyUnits) _then) = __$DailyUnitsCopyWithImpl;
 @override @useResult
 $Res call({
- String time, String temperature2mMax, String temperature2mMin, String precipitationSum
+ String time,@JsonKey(name: 'temperature_2m_max') String temperature2mMax,@JsonKey(name: 'temperature_2m_min') String temperature2mMin,@JsonKey(name: 'precipitation_sum') String precipitationSum
 });
 
 
@@ -638,9 +638,9 @@ mixin _$Daily {
 
 /// The date
  List<String> get time;/// The maximum temperature at 2 meters above ground level in degrees Celsius.
- List<double> get temperature2mMax;/// The minimum temperature at 2 meters above ground level in degrees Celsius.
- List<double> get temperature2mMin;/// Sum of daily precipitation (including rain, showers and snowfall) in millimeters.
- List<double> get precipitationSum;
+@JsonKey(name: 'temperature_2m_max') List<double> get temperature2mMax;/// The minimum temperature at 2 meters above ground level in degrees Celsius.
+@JsonKey(name: 'temperature_2m_min') List<double> get temperature2mMin;/// Sum of daily precipitation (including rain, showers and snowfall) in millimeters.
+@JsonKey(name: 'precipitation_sum') List<double> get precipitationSum;
 /// Create a copy of Daily
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -673,7 +673,7 @@ abstract mixin class $DailyCopyWith<$Res>  {
   factory $DailyCopyWith(Daily value, $Res Function(Daily) _then) = _$DailyCopyWithImpl;
 @useResult
 $Res call({
- List<String> time, List<double> temperature2mMax, List<double> temperature2mMin, List<double> precipitationSum
+ List<String> time,@JsonKey(name: 'temperature_2m_max') List<double> temperature2mMax,@JsonKey(name: 'temperature_2m_min') List<double> temperature2mMin,@JsonKey(name: 'precipitation_sum') List<double> precipitationSum
 });
 
 
@@ -781,7 +781,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<String> time,  List<double> temperature2mMax,  List<double> temperature2mMin,  List<double> precipitationSum)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<String> time, @JsonKey(name: 'temperature_2m_max')  List<double> temperature2mMax, @JsonKey(name: 'temperature_2m_min')  List<double> temperature2mMin, @JsonKey(name: 'precipitation_sum')  List<double> precipitationSum)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Daily() when $default != null:
 return $default(_that.time,_that.temperature2mMax,_that.temperature2mMin,_that.precipitationSum);case _:
@@ -802,7 +802,7 @@ return $default(_that.time,_that.temperature2mMax,_that.temperature2mMin,_that.p
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<String> time,  List<double> temperature2mMax,  List<double> temperature2mMin,  List<double> precipitationSum)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<String> time, @JsonKey(name: 'temperature_2m_max')  List<double> temperature2mMax, @JsonKey(name: 'temperature_2m_min')  List<double> temperature2mMin, @JsonKey(name: 'precipitation_sum')  List<double> precipitationSum)  $default,) {final _that = this;
 switch (_that) {
 case _Daily():
 return $default(_that.time,_that.temperature2mMax,_that.temperature2mMin,_that.precipitationSum);case _:
@@ -822,7 +822,7 @@ return $default(_that.time,_that.temperature2mMax,_that.temperature2mMin,_that.p
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<String> time,  List<double> temperature2mMax,  List<double> temperature2mMin,  List<double> precipitationSum)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<String> time, @JsonKey(name: 'temperature_2m_max')  List<double> temperature2mMax, @JsonKey(name: 'temperature_2m_min')  List<double> temperature2mMin, @JsonKey(name: 'precipitation_sum')  List<double> precipitationSum)?  $default,) {final _that = this;
 switch (_that) {
 case _Daily() when $default != null:
 return $default(_that.time,_that.temperature2mMax,_that.temperature2mMin,_that.precipitationSum);case _:
@@ -837,7 +837,7 @@ return $default(_that.time,_that.temperature2mMax,_that.temperature2mMin,_that.p
 @JsonSerializable()
 
 class _Daily implements Daily {
-  const _Daily({required final  List<String> time, required final  List<double> temperature2mMax, required final  List<double> temperature2mMin, required final  List<double> precipitationSum}): _time = time,_temperature2mMax = temperature2mMax,_temperature2mMin = temperature2mMin,_precipitationSum = precipitationSum;
+  const _Daily({required final  List<String> time, @JsonKey(name: 'temperature_2m_max') required final  List<double> temperature2mMax, @JsonKey(name: 'temperature_2m_min') required final  List<double> temperature2mMin, @JsonKey(name: 'precipitation_sum') required final  List<double> precipitationSum}): _time = time,_temperature2mMax = temperature2mMax,_temperature2mMin = temperature2mMin,_precipitationSum = precipitationSum;
   factory _Daily.fromJson(Map<String, dynamic> json) => _$DailyFromJson(json);
 
 /// The date
@@ -852,7 +852,7 @@ class _Daily implements Daily {
 /// The maximum temperature at 2 meters above ground level in degrees Celsius.
  final  List<double> _temperature2mMax;
 /// The maximum temperature at 2 meters above ground level in degrees Celsius.
-@override List<double> get temperature2mMax {
+@override@JsonKey(name: 'temperature_2m_max') List<double> get temperature2mMax {
   if (_temperature2mMax is EqualUnmodifiableListView) return _temperature2mMax;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_temperature2mMax);
@@ -861,7 +861,7 @@ class _Daily implements Daily {
 /// The minimum temperature at 2 meters above ground level in degrees Celsius.
  final  List<double> _temperature2mMin;
 /// The minimum temperature at 2 meters above ground level in degrees Celsius.
-@override List<double> get temperature2mMin {
+@override@JsonKey(name: 'temperature_2m_min') List<double> get temperature2mMin {
   if (_temperature2mMin is EqualUnmodifiableListView) return _temperature2mMin;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_temperature2mMin);
@@ -870,7 +870,7 @@ class _Daily implements Daily {
 /// Sum of daily precipitation (including rain, showers and snowfall) in millimeters.
  final  List<double> _precipitationSum;
 /// Sum of daily precipitation (including rain, showers and snowfall) in millimeters.
-@override List<double> get precipitationSum {
+@override@JsonKey(name: 'precipitation_sum') List<double> get precipitationSum {
   if (_precipitationSum is EqualUnmodifiableListView) return _precipitationSum;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_precipitationSum);
@@ -910,7 +910,7 @@ abstract mixin class _$DailyCopyWith<$Res> implements $DailyCopyWith<$Res> {
   factory _$DailyCopyWith(_Daily value, $Res Function(_Daily) _then) = __$DailyCopyWithImpl;
 @override @useResult
 $Res call({
- List<String> time, List<double> temperature2mMax, List<double> temperature2mMin, List<double> precipitationSum
+ List<String> time,@JsonKey(name: 'temperature_2m_max') List<double> temperature2mMax,@JsonKey(name: 'temperature_2m_min') List<double> temperature2mMin,@JsonKey(name: 'precipitation_sum') List<double> precipitationSum
 });
 
 

@@ -13,28 +13,30 @@ abstract class WeatherApiModel with _$WeatherApiModel {
     required double longitude,
 
     /// The generation time of the data in milliseconds.
-    required double generationTimeMs,
+    @JsonKey(name: 'generationtime_ms') required double generationTimeMs,
 
     /// The UTC offset in seconds.
-    required int utcOffsetSeconds,
+    @JsonKey(name: 'utc_offset_seconds') required int utcOffsetSeconds,
 
     /// The timezone of the location.
     required String timezone,
 
     /// The abbreviation of the timezone.
+    @JsonKey(name: 'timezone_abbreviation')
     required String timezoneAbbreviation,
 
     /// The elevation used for statistical downscaling.
     required double elevation,
 
     /// The units of the daily data.
-    required DailyUnits dailyUnits,
+    @JsonKey(name: 'daily_units') required DailyUnits dailyUnits,
 
     /// The daily weather data.
     required Daily daily,
   }) = _WeatherApiModel;
 
-  factory WeatherApiModel.fromJson(Map<String, Object?> json) => _$WeatherApiModelFromJson(json);
+  factory WeatherApiModel.fromJson(Map<String, Object?> json) =>
+      _$WeatherApiModelFromJson(json);
 }
 
 @freezed
@@ -44,16 +46,17 @@ abstract class DailyUnits with _$DailyUnits {
     required String time,
 
     /// The unit for the maximum temperature at 2 meters above ground level.
-    required String temperature2mMax,
+    @JsonKey(name: 'temperature_2m_max') required String temperature2mMax,
 
     /// The unit for the minimum temperature at 2 meters above ground level.
-    required String temperature2mMin,
+    @JsonKey(name: 'temperature_2m_min') required String temperature2mMin,
 
     /// The unit for the sum of daily precipitation (including rain, showers and snowfall).
-    required String precipitationSum,
+    @JsonKey(name: 'precipitation_sum') required String precipitationSum,
   }) = _DailyUnits;
 
-  factory DailyUnits.fromJson(Map<String, Object?> json) => _$DailyUnitsFromJson(json);
+  factory DailyUnits.fromJson(Map<String, Object?> json) =>
+      _$DailyUnitsFromJson(json);
 }
 
 @freezed
@@ -63,13 +66,14 @@ abstract class Daily with _$Daily {
     required List<String> time,
 
     /// The maximum temperature at 2 meters above ground level in degrees Celsius.
-    required List<double> temperature2mMax,
+    @JsonKey(name: 'temperature_2m_max') required List<double> temperature2mMax,
 
     /// The minimum temperature at 2 meters above ground level in degrees Celsius.
-    required List<double> temperature2mMin,
+    @JsonKey(name: 'temperature_2m_min') required List<double> temperature2mMin,
 
     /// Sum of daily precipitation (including rain, showers and snowfall) in millimeters.
-    required List<double> precipitationSum,
+    @JsonKey(name: 'precipitation_sum') required List<double> precipitationSum,
   }) = _Daily;
+
   factory Daily.fromJson(Map<String, Object?> json) => _$DailyFromJson(json);
 }

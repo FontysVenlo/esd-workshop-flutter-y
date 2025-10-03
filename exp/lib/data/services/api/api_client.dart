@@ -7,9 +7,13 @@ import 'package:intl/intl.dart' show DateFormat;
 import 'model/weather_api_model.dart';
 
 class ApiClient {
-  Future<Either<String, WeatherApiModel>> fetchWeather(double latitude, double longitude) async {
-    final startDate = DateTime(2025, 1, 1);
-    final endDate = DateTime(2025, 12, 31);
+  Future<Either<String, WeatherApiModel>> fetchWeather(
+    double latitude,
+    double longitude,
+  ) async {
+    final now = DateTime.now();
+    final startDate = DateTime(now.year - 1, 1, 1);
+    final endDate = DateTime(now.year - 1, 12, 31);
 
     final url = Uri.parse(
       'https://archive-api.open-meteo.com/v1/era5?'
@@ -25,7 +29,9 @@ class ApiClient {
       final response = await http.get(url);
 
       if (response.statusCode == 200) {
-        final weatherData = WeatherApiModel.fromJson(Map<String, dynamic>.from(jsonDecode(response.body) as Map));
+        final weatherData = WeatherApiModel.fromJson(
+          Map<String, dynamic>.from(jsonDecode(response.body) as Map),
+        );
         return Either.right(weatherData);
       } else {
         return Either.left('Invalid response: ${response.reasonPhrase}');
