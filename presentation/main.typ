@@ -25,14 +25,76 @@
 
 #slide[
   = Flutter vs. Mobile
+  #block(text(size: 0.65em)[
+    #table(
+      columns: 6,
+      [*Category*],
+      [*Flutter* @flutter],
+      [*Android* @android],
+      [*iOS* @ios],
+      [*React Native* @react-native],
+      [*Kotlin Multiplatform* @kmp],
+
+      [*Cross-Platform*], [Yes], [No], [No], [Yes], [Yes],
+      [*Programming Language*], [Dart], [Kotlin], [Swift], [JavaScript/TypeScript], [Kotlin + Swift],
+
+      [*UI Development*],
+      [Declarative UI with Widgets],
+      [Declarative UI with Jetpack Compose],
+      [Declarative UI with SwiftUI],
+      [Declarative UI with Components],
+      [Native UI with Platform APIs],
+
+      [*Performance*], [Near-Native], [Native], [Native], [Near-Native], [Native],
+
+      [*Hot Reload*], [Yes], [Yes], [Limited], [Yes], [Depends on Platform],
+
+      [*Ecosystem Maturity*], [Growing], [Mature], [Mature], [Mature], [Emerging],
+    )
+  ])
 ]
 
 #slide[
   = Flutter vs. Desktop
+  #block(text(size: 0.65em)[
+    #table(
+      columns: 6,
+      [*Category*], [*Flutter* @flutter], [*Electron JS* ], [*Tauri* ], [*Kotlin Multiplatform* @kmp], [*Native*],
+
+      [*Cross-Platform*], [Yes], [Yes], [Yes], [Yes], [No],
+
+      [*Programming Language*],
+      [Dart],
+      [JavaScript/TypeScript],
+      [Rust + Web Technologies],
+      [Kotlin + Platform Languages],
+      [C/C++, Swift, Rust, etc.],
+
+      [*Performance*], [Near-Native], [Moderate], [High], [Native], [Native],
+
+      [*Hot Reload*], [Yes], [Limited], [Limited], [Depends on Platform], [No],
+
+      [*Ecosystem Maturity*], [Growing], [Mature], [Emerging], [Emerging], [Mature],
+    )
+  ])
+
 ]
 
 #slide[
   = Flutter vs. Web
+  #table(
+    columns: 3,
+    [*Category*], [*Flutter Web* @flutter], [*Web Frameworks*],
+
+    [*Programming Language*], [Dart], [JavaScript/TypeScript],
+
+    [*Performance*], [Moderate], [High],
+
+    [*Hot Reload*], [Yes], [Yes],
+
+    [*Ecosystem Maturity*], [Growing], [Mature],
+  )
+  #notice[In Flutter Web, text not highlightable and extensions do not work!]
 ]
 
 #slide[
@@ -54,4 +116,3 @@
 #slide[
   #bibliography("sources.bib", style: "ieee", title: "References")
 ]
-
