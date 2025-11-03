@@ -1,6 +1,6 @@
 # Flutter Climate App Workshop
 
-Welcome to the **Flutter Climate App Workshop**, which is designed to guide you through enterprise Flutter development with hands-on learning and practical exercises. By the end of this workshop, you'll understand core Flutter patterns and be ready to (learn more about) build(ing) production-ready applications.
+Welcome to the **Flutter Workshop**, which is designed to guide you through enterprise Flutter development with hands-on learning and practical exercises. By the end of this workshop, you'll understand core Flutter patterns and be ready to (learn more about) build(ing) production-ready applications.
 
 ---
 
