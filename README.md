@@ -1,6 +1,6 @@
 # Flutter Climate App Workshop
 
-Welcome to the **Flutter Climate App Workshop**, which is designed to guide you through enterprise Flutter development with hands-on learning and practical exercises. By the end of this workshop, you'll understand core Flutter patterns and be ready to (learn more about) build(ing) production-ready applications.
+Welcome to the **Flutter Climate App Workshop**, which is designed to guide you through enterprise Flutter development with hands-on learning and practical exercises. By the end of this workshop, you'll understand core Flutter patterns and be ready to (learn more about) build(ing) production-ready applications.
 
 ---
 
@@ -8,19 +8,20 @@ Welcome to the **Flutter Climate App Workshop**, which is designed to guide you
 
 1. [Workshop Overview](#workshop-overview)
 2. [Prerequisites](#prerequisites)
-3. [Part 1: Overview](#part-1-Overview)
-    - [Flutter Overview](#1-flutter-overview-5-min)
-    - [Project Architecture Walkthrough](#2-project-architecture-walkthrough-10-min)
+3. [Part 1: Overview](#part-1-overview)
+    - [What is Flutter?](#1-what-is-flutter)
+    - [Project Architecture](#2-project-architecture)
 4. [Part 2: Workshop Exercises](#part-2-workshop-exercises)
-    - [Exercise 1: Implement Location Selection Logic](#exercise-1-implement-location-selection-logic-15-min)
-    - [Exercise 2: Implement Error State Handling](#exercise-2-implement-error-state-handling-15-min)
-    - [Exercise 3: Implement Conditional UI Rendering](#exercise-3-implement-conditional-ui-rendering-15-min)
-    - [Exercise 4: Add Location Input Validation (Optional)](#exercise-4-add-location-input-validation-optional-extension)
-    - [Exercise 5: Implement Chart Data Scaling (Optional)](#exercise-5-implement-chart-data-scaling-optional-extension)
-5. [Part 3: Wrap-Up](#part-3-wrap-up)
-6. [Why Learn Flutter?](#why-learn-flutter)
-7. [Learning Resources](#learning-resources)
-8. [Quick Reference](#quick-reference)
+    - [Exercise 1: Implement Location Selection Logic](#exercise-1-implement-location-selection-logic)
+    - [Exercise 2: Implement Error State Handling](#exercise-2-implement-error-state-handling)
+    - [Exercise 3: Implement Conditional UI Rendering](#exercise-3-implement-conditional-ui-rendering)
+    - [Exercise 4: Add Location Input Validation (Optional)](#exercise-4-add-location-input-validation-optional)
+    - [Exercise 5: Implement Chart Data Scaling (Optional)](#exercise-5-implement-chart-data-scaling-optional)
+5. [Part 3: Congratulations!](#part-3-congratulations)
+6. [Where to Go From Here](#where-to-go-from-here)
+7. [When to Choose Flutter](#when-to-choose-flutter)
+8. [Essential Flutter Commands](#essential-flutter-commands)
+9. [Performance Best Practices](#performance-best-practices)
 
 ---
 
@@ -35,10 +36,10 @@ This workshop is structured as:
 
 You'll work with a Climate Data visualization app that demonstrates Flutter patterns:
 
-- **MVVM Architecture** with reactive state management
-- **Functional error handling** using the 'Either' monad
-- **API integration** with weather data
-- **Interactive charts** and map visualization
+- **MVVM Architecture** with reactive state management
+- **Functional error handling** using the 'Either' monad
+- **API integration** with weather data
+- **Interactive charts** and map visualization
 
 ### Learning Approach
 
@@ -50,13 +51,13 @@ Rather than building from scratch, you'll complete targeted features in an exist
 
 Before starting the workshop, ensure you have:
 
-✅ **Docker installed** (run `docker version` to verify)  
-✅ **Flutter SDK installed** (run `flutter doctor` to verify)  
-✅ **IDE configured** (VS Code with Flutter extension OR IntelliJ with Flutter Extension)  
-✅ **Project dependencies installed** (run `flutter pub get` in project directory 'task')  
-✅ **App successfully runs** (test with `flutter run`)
+✅ **Docker installed** (run `docker version` to verify)  
+✅ **Flutter SDK installed** (run `flutter doctor` to verify)  
+✅ **IDE configured** (VS Code with Flutter extension OR IntelliJ with Flutter Extension)  
+✅ **Project dependencies installed** (run `flutter pub get` in project directory 'task')  
+✅ **App successfully runs** (test with `flutter run`)
 
-> **Note:** If you encounter setup issues, refer to the [Official Flutter Installation Guide](https://docs.flutter.dev/get-started/install), or ask the referents of this workshop.
+> **Note:** If you encounter setup issues, refer to the [Official Flutter Installation Guide](https://docs.flutter.dev/get-started/install), or ask the referents of this workshop.
 
 ---
 
@@ -71,7 +72,7 @@ Flutter is Google's open-source UI toolkit for building natively compiled applic
 - **Cross-platform**: Write once, deploy to iOS, Android, Web, Windows, macOS, Linux
 - **Beautiful UI**: Rich widget library with Material and Cupertino designs
 - **Hot Reload**: See changes instantly (exceptions apply) without losing app state
-- 💼 **Enterprise-Ready**: Used by Alibaba, BMW, Google Pay, eBay
+- 💼 **Enterprise-Ready**: Used by Alibaba, BMW, Google Pay, eBay
 
 **Why Dart?**
 
@@ -79,7 +80,7 @@ Flutter is Google's open-source UI toolkit for building natively compiled applic
 - Ahead-of-time (AOT) compilation for production performance
 - Just-in-time (JIT) compilation for fast development cycles
 
-> **Learn More:** [What is Flutter?](https://docs.flutter.dev/resources/architectural-overview)
+> **Learn More:** [What is Flutter?](https://docs.flutter.dev/resources/architectural-overview)
 
 ---
 
@@ -87,7 +88,7 @@ Flutter is Google's open-source UI toolkit for building natively compiled applic
 
 #### Directory Structure
 
-Our Climate App follows **Clean Architecture** principles:
+Our Climate App follows **Clean Architecture** principles:
 
 ```
 lib/
@@ -111,7 +112,7 @@ lib/
 
 ```
 
-> **Learn More:** [Flutter App Architecture](https://docs.flutter.dev/app-architecture)
+> **Learn More:** [Flutter App Architecture](https://docs.flutter.dev/app-architecture)
 
 #### Key Architectural Patterns
 
@@ -139,9 +140,9 @@ final selectedLocation = watchPropertyValue(
 );
 ```
 
-When the ViewModel calls `notifyListeners()`, only widgets watching that specific property rebuild - not the entire screen.
+When the ViewModel calls `notifyListeners()`, only widgets watching that specific property rebuild - not the entire screen.
 
-> **Learn More:** [State Management Approaches](https://docs.flutter.dev/data-and-backend/state-mgmt/options)
+> **Learn More:** [State Management Approaches](https://docs.flutter.dev/data-and-backend/state-mgmt/options)
 
 **3. Functional Error Handling (Either Monad)**
 
@@ -151,7 +152,7 @@ Either<String, WeatherApiModel>  // Left = error, Right = success
 
 This pattern makes errors explicit and type-safe - no hidden exceptions for expected failures.
 
-> **Learn More:** [Error Handling Best Practices](https://dart.dev/effective-dart/usage#do-use-rethrow-to-rethrow-a-caught-exception)
+> **Learn More:** [Error Handling Best Practices](https://dart.dev/effective-dart/usage#do-use-rethrow-to-rethrow-a-caught-exception)
 
 **4. Dependency Injection (Service Locator)**
 
@@ -183,13 +184,13 @@ Each exercise teaches a core Flutter pattern by implementing a missing feature:
 | **4. Input Validation**   | TODO min | **         | Form validation, user feedback, SnackBars        |
 | **5. Data Scaling**       | TODO min | ****       | List operations, mathematical transformations    |
 
-> **Tip:** Complete exercises in order. Each builds on concepts from the previous one.
+> **Tip:** Complete exercises in order. Each builds on concepts from the previous one.
 
 ---
 
 ## Exercise 1: Implement Location Selection Logic
 
-**File:** `lib/ui/climate/view_model/climate_view_model.dart`
+**File:** `lib/ui/climate/view_model/climate_view_model.dart`
 
 ### Learning Objectives
 
@@ -216,15 +217,15 @@ notifyListeners() → ClimateScreen rebuilds → Shows Berlin weather
 
 ### Your Task
 
-Implement the `selectLocation` method that's currently a comment at **line 48**.
+Implement the `selectLocation` method that's currently a comment at **line 48**.
 
 ### Requirements
 
-1. ✅ Check if the location exists in the `_locations` Map
+1. ✅ Check if the location exists in the `_locations` Map
 2. ✅ If valid:
-    - Update `_selectedLocation` to the new location name
-    - Call `fetchClimateData()` to load data
-    - Call `notifyListeners()` to trigger UI rebuild
+    - Update `_selectedLocation` to the new location name
+    - Call `fetchClimateData()` to load data
+    - Call `notifyListeners()` to trigger UI rebuild
 
 ### Starting Code
 
@@ -247,12 +248,12 @@ void selectLocation(String name) {
 
 ### Hints 💡
 
-- **Map Operations:** Use `_locations.containsKey(name)` to safely check existence  
-- **State Updates:** `notifyListeners()` is the "magic" that triggers rebuilds  
-- **Side Effects:** `fetchClimateData()` is already implemented - just call it  
-- **Defensive Programming:** Always validate before mutating state
+- **Map Operations:** Use `_locations.containsKey(name)` to safely check existence  
+- **State Updates:** `notifyListeners()` is the "magic" that triggers rebuilds  
+- **Side Effects:** `fetchClimateData()` is already implemented - just call it  
+- **Defensive Programming:** Always validate before mutating state
 
-> **Learn More:** [Managing State in Flutter](https://docs.flutter.dev/data-and-backend/state-mgmt/simple)
+> **Learn More:** [Managing State in Flutter](https://docs.flutter.dev/data-and-backend/state-mgmt/simple)
 
 ### 💡 Solution
 
@@ -268,22 +269,22 @@ void selectLocation(String name) {
 
 **Why this works:**
 
-- `containsKey()` prevents crashes from invalid location names
-- Setting `_selectedLocation` updates the state
-- `fetchClimateData()` is async but we don't await (fire-and-forget pattern)
-- `notifyListeners()` broadcasts the state change to all listeners
+- `containsKey()` prevents crashes from invalid location names
+- Setting `_selectedLocation` updates the state
+- `fetchClimateData()` is async but we don't await (fire-and-forget pattern)
+- `notifyListeners()` broadcasts the state change to all listeners
 
 
 ---
 
 ## Exercise 2: Implement Error State Handling
 
-**File:** `lib/ui/climate/view_model/climate_view_model.dart`
+**File:** `lib/ui/climate/view_model/climate_view_model.dart`
 
 ### Learning Objectives
 
 - ✅ Understand the Either monad for error handling
-- ✅ Use pattern matching with `match()`
+- ✅ Use pattern matching with `match()`
 - ✅ Manage multiple state variables consistently
 - ✅ Implement enterprise-grade error handling
 
@@ -296,7 +297,7 @@ API calls can fail for many reasons:
 - Server errors (500, 503)
 - Rate limiting
 
-Instead of throwing exceptions, our app uses the **Either** type from functional programming:
+Instead of throwing exceptions, our app uses the **Either** type from functional programming:
 
 ```dart
 Either<String, WeatherApiModel>
@@ -305,25 +306,25 @@ Either<String, WeatherApiModel>
  (Error)     (Success)
 ```
 
-The `match()` method safely handles both cases without try-catch blocks.
+The `match()` method safely handles both cases without try-catch blocks.
 
 ### Your Task
 
-Complete the error handling in the `fetchClimateData()` method at **lines 63-72**.
+Complete the error handling in the `fetchClimateData()` method at **lines 63-72**.
 
 ### Requirements
 
-**When the API call fails** (Left side of Either):
+**When the API call fails** (Left side of Either):
 
-1. Set `_errorMessage` to the error string
-2. Set `_climateData` to `null` (clear stale data)
+1. Set `_errorMessage` to the error string
+2. Set `_climateData` to `null` (clear stale data)
 
-**When the API call succeeds** (Right side of Either):
+**When the API call succeeds** (Right side of Either):
 
-1. Set `_climateData` to the received weather data
-2. Set `_errorMessage` to `null` (clear previous errors)
+1. Set `_climateData` to the received weather data
+2. Set `_errorMessage` to `null` (clear previous errors)
 
-> **Important:** Always set **both** state variables to maintain consistency.
+> **Important:** Always set **both** state variables to maintain consistency.
 
 ### Starting Code
 
@@ -354,7 +355,7 @@ result.match(
 
 **Test Case 1: Simulate API Error**
 
-Temporarily modify `lib/data/services/api/api_client.dart` at line 33:
+Temporarily modify `lib/data/services/api/api_client.dart` at line 33:
 
 ```dart
 // Replace this line:
@@ -372,10 +373,10 @@ Add a location with invalid coordinates (e.g., latitude = 200).
 
 ### Hints 💡
 
-- **Pattern Matching:** The `match()` function takes two callbacks: `(leftValue)` and `(rightValue)`
-- **State Consistency:** Never have both `_errorMessage` and `_climateData` set simultaneously  
-  - **Already Implemented:** `notifyListeners()` is called after `match()` completes  
-  - **Functional Style:** No exceptions, no null checks - exhaustive pattern matching
+- **Pattern Matching:** The `match()` function takes two callbacks: `(leftValue)` and `(rightValue)`
+- **State Consistency:** Never have both `_errorMessage` and `_climateData` set simultaneously  
+  - **Already Implemented:** `notifyListeners()` is called after `match()` completes  
+  - **Functional Style:** No exceptions, no null checks - exhaustive pattern matching
 
 > **Learn More:**
 >
@@ -399,19 +400,19 @@ result.match(
 
 **Why this pattern works:**
 
-- **Type Safety:** Compiler ensures both cases are handled
-- **Explicit Errors:** No hidden exceptions - all errors are values
-- **Maintainability:** Adding new error types doesn't break existing code
-- **Testability:** Easy to mock Either<Error, Success> in unit tests
+- **Type Safety:** Compiler ensures both cases are handled
+- **Explicit Errors:** No hidden exceptions - all errors are values
+- **Maintainability:** Adding new error types doesn't break existing code
+- **Testability:** Easy to mock Either<Error, Success> in unit tests
 
-**Enterprise Benefit:** This pattern scales to complex apps where multiple error types (validation, network, business logic) need different handling strategies.
+**Enterprise Benefit:** This pattern scales to complex apps where multiple error types (validation, network, business logic) need different handling strategies.
 
 
 ---
 
 ## Exercise 3: Implement Conditional UI Rendering
 
-**File:** `lib/ui/climate/widgets/climate_screen.dart`
+**File:** `lib/ui/climate/widgets/climate_screen.dart`
 
 ### Learning Objectives
 
@@ -444,18 +445,18 @@ child: isLoading ? Spinner() : Chart()
 
 ### Your Task
 
-Implement the conditional rendering logic in `_ClimateBody.build()` starting at **line 185**.
+Implement the conditional rendering logic in `_ClimateBody.build()` starting at **line 185**.
 
 ### Requirements
 
-Build the widget tree using **nested ternary operators** in this priority order:
+Build the widget tree using **nested ternary operators** in this priority order:
 
-1. **First check:** `isLoading` → show loading spinner
-2. **Then check:** `errorMessage != null` → show error text
-3. **Then check:** `climateData != null` → show chart
-4. **Otherwise:** show placeholder message
+1. **First check:** `isLoading` → show loading spinner
+2. **Then check:** `errorMessage != null` → show error text
+3. **Then check:** `climateData != null` → show chart
+4. **Otherwise:** show placeholder message
 
-> **Critical:** Order matters! Loading state has highest priority.
+> **Critical:** Order matters! Loading state has highest priority.
 
 ### Starting Code
 
@@ -498,10 +499,10 @@ child: Center(
 
 ### Hints 💡
 
-- **Ternary Syntax:** `condition ? trueWidget : falseWidget`  
-  - **Nesting Ternaries:** Chain them with proper indentation for readability  
-  - **Const Constructors:** Use `const` where possible for performance (compile-time optimization)  
-  - **State Priority:** Check most important state first (loading blocks everything else)
+- **Ternary Syntax:** `condition ? trueWidget : falseWidget`  
+  - **Nesting Ternaries:** Chain them with proper indentation for readability  
+  - **Const Constructors:** Use `const` where possible for performance (compile-time optimization)  
+  - **State Priority:** Check most important state first (loading blocks everything else)
 
 > **Learn More:**
 >
@@ -539,11 +540,11 @@ child: Center(
 
 **Performance Considerations:**
 
-- `const` constructors are created at compile-time (zero runtime cost)
-- `Center` widget doesn't rebuild - only its child changes
+- `const` constructors are created at compile-time (zero runtime cost)
+- `Center` widget doesn't rebuild - only its child changes
 - Conditional rendering prevents unnecessary widget creation
 
-**Readability Tip:** Some developers prefer extracting this to a separate method:
+**Readability Tip:** Some developers prefer extracting this to a separate method:
 
 ```dart
 Widget _buildContent() {
@@ -560,7 +561,7 @@ Both approaches are valid - ternaries are more concise, if-statements are more e
 
 ## Exercise 4: Add Location Input Validation (Optional)
 
-**File:** `lib/ui/climate/widgets/climate_screen.dart`
+**File:** `lib/ui/climate/widgets/climate_screen.dart`
 
 ### Learning Objectives
 
@@ -579,18 +580,18 @@ Currently, the "Add Location" dialog accepts any coordinate values. This causes 
 
 **Geographic Coordinate Constraints:**
 
-- **Latitude:** -90° (South Pole) to +90° (North Pole)
-- **Longitude:** -180° (West) to +180° (East)
+- **Latitude:** -90° (South Pole) to +90° (North Pole)
+- **Longitude:** -180° (West) to +180° (East)
 
 ### Your Task
 
-Add validation to `_showAddLocationDialog` before calling `addLocation()` at **lines starting at 73**.
+Add validation to `_showAddLocationDialog` before calling `addLocation()` at **lines starting at 73**.
 
 ### Requirements
 
 1. Validate name is not empty (already implemented)
-2. Validate latitude: `-90 ≤ lat ≤ 90`
-3. Validate longitude: `-180 ≤ lon ≤ 180`
+2. Validate latitude: `-90 ≤ lat ≤ 90`
+3. Validate longitude: `-180 ≤ lon ≤ 180`
 4. Show SnackBar with error message if validation fails
 5. Only add location and close dialog if all validations pass
 
@@ -640,10 +641,10 @@ ScaffoldMessenger.of(context).showSnackBar(
 
 ### Hints 💡
 
-- **Boundary Testing:** Remember to allow exactly -90, 90, -180, 180  
-- **User Experience:** Keep the dialog open on error so users can correct their input  
-- **Error Messages:** Be specific about what's wrong and what values are valid  
-- **Compound Conditions:** Use `&&` to combine multiple validation checks
+- **Boundary Testing:** Remember to allow exactly -90, 90, -180, 180  
+- **User Experience:** Keep the dialog open on error so users can correct their input  
+- **Error Messages:** Be specific about what's wrong and what values are valid  
+- **Compound Conditions:** Use `&&` to combine multiple validation checks
 
 > **Learn More:**
 >
@@ -676,7 +677,7 @@ if (name.isNotEmpty && lat != null && lon != null) {
 }
 ```
 
-**Production Enhancement:** In a real app, you'd also validate:
+**Production Enhancement:** In a real app, you'd also validate:
 
 - Name doesn't contain special characters
 - Location name doesn't already exist (prevent duplicates)
@@ -686,12 +687,12 @@ if (name.isNotEmpty && lat != null && lon != null) {
 
 ## Exercise 5: Implement Chart Data Scaling (Optional)
 
-**File:** `lib/ui/climate/widgets/climate_diagram.dart`
+**File:** `lib/ui/climate/widgets/climate_diagram.dart`
 
 ### Learning Objectives
 
 - ✅ Perform mathematical transformations on datasets
-- ✅ Use functional programming with `reduce()`
+- ✅ Use functional programming with `reduce()`
 - ✅ Handle edge cases (division by zero)
 - ✅ Understand chart visualization scaling
 
@@ -699,8 +700,8 @@ if (name.isNotEmpty && lat != null && lon != null) {
 
 The climate chart displays two metrics on the same Y-axis:
 
-- **Temperature:** Ranges from -20°C to +40°C (60° range)
-- **Precipitation:** Ranges from 0mm to 100mm (100mm range)
+- **Temperature:** Ranges from -20°C to +40°C (60° range)
+- **Precipitation:** Ranges from 0mm to 100mm (100mm range)
 
 **The Problem:**
 
@@ -725,16 +726,16 @@ Precip value of 50mm displays as: 50 * 0.48 = 24 chart units
 
 ### Your Task
 
-Calculate the scaling factor for precipitation data starting at **line 16**.
+Calculate the scaling factor for precipitation data starting at **line 16**.
 
 ### Requirements
 
 1. Find the maximum precipitation value
 2. Find the temperature range (max temp - min temp)
-3. Calculate scale factor: `(tempRange * 0.8) / maxPrecipitation`
+3. Calculate scale factor: `(tempRange * 0.8) / maxPrecipitation`
 4. Handle edge case: if max precipitation is 0, use scale factor of 1.0
 
-> **Why 0.8?** This reserves 20% of chart space above precipitation bars, preventing them from being too heavy on the visualization.
+> **Why 0.8?** This reserves 20% of chart space above precipitation bars, preventing them from being too heavy on the visualization.
 
 ### Starting Code
 
@@ -781,11 +782,11 @@ actualValue = displayValue / precipScale = 24 / 0.4 = 60mm ✅
 
 ### Hints 💡
 
-- **List.reduce():** Applies a function across all list elements  
-- **math.max/min:** Dart's built-in comparison functions  
-- **Division by Zero:** Always check if denominator > 0 before dividing  
-- **Ternary Operator:** Perfect for conditional expressions  
-- **Import Needed:** `import 'dart:math' as math;` (already present)
+- **List.reduce():** Applies a function across all list elements  
+- **math.max/min:** Dart's built-in comparison functions  
+- **Division by Zero:** Always check if denominator > 0 before dividing  
+- **Ternary Operator:** Perfect for conditional expressions  
+- **Import Needed:** `import 'dart:math' as math;` (already present)
 
 > **Learn More:**
 >
@@ -863,10 +864,10 @@ You've completed the Flutter Climate App workshop. Let's summarize what you've l
 
 
 1. **🔄 Reactive State Management**  
-   Changes in ViewModel automatically update UI through `notifyListeners()` and `watchPropertyValue()`
+   Changes in ViewModel automatically update UI through `notifyListeners()` and `watchPropertyValue()`
 
 2. **⚠️ Functional Error Handling**  
-   `Either` type makes errors explicit and type-safe - no hidden exceptions
+   `Either` type makes errors explicit and type-safe - no hidden exceptions
 
 3. **🧩 Widget Composition**  
    Complex UIs are built from simple, reusable pieces (Lego bricks)
@@ -880,33 +881,33 @@ You've completed the Flutter Climate App workshop. Let's summarize what you've l
 
 #### **Enterprise Architecture Benefits:**
 
-- **Clear Separation of Concerns**: UI ↔ Business Logic ↔ Data Layer  
-- **Testable ViewModels**: No UI dependencies, pure Dart logic  
-- **Type-Safe Error Handling**: Compiler catches missing error cases  
-- **Performance Optimization**: Selective rebuilds with `watchPropertyValue`  
-- **Maintainable Codebase**: SOLID principles, dependency injection
+- **Clear Separation of Concerns**: UI ↔ Business Logic ↔ Data Layer  
+- **Testable ViewModels**: No UI dependencies, pure Dart logic  
+- **Type-Safe Error Handling**: Compiler catches missing error cases  
+- **Performance Optimization**: Selective rebuilds with `watchPropertyValue`  
+- **Maintainable Codebase**: SOLID principles, dependency injection
 
 ---
 ### Where to Go From Here
 
 #### **Official Flutter Resources**
 
-📚 **Essential Reading:**
+📚 **Essential Reading:**
 
-- [Flutter Codelabs](https://docs.flutter.dev/codelabs) - 15+ hands-on tutorials
-- [Widget Catalog](https://docs.flutter.dev/ui/widgets) - Complete widget reference with examples
-- [Cookbook](https://docs.flutter.dev/cookbook) - Solutions to common patterns
-- [API Reference](https://api.flutter.dev/) - Searchable documentation
+- [Flutter Codelabs](https://docs.flutter.dev/codelabs) - 15+ hands-on tutorials
+- [Widget Catalog](https://docs.flutter.dev/ui/widgets) - Complete widget reference with examples
+- [Cookbook](https://docs.flutter.dev/cookbook) - Solutions to common patterns
+- [API Reference](https://api.flutter.dev/) - Searchable documentation
 
-🎓 **Learning Paths:**
+🎓 **Learning Paths:**
 
-- [Flutter Basics Course](https://docs.flutter.dev/get-started/learn-more) - Official beginner curriculum
-- [State Management Guide](https://docs.flutter.dev/data-and-backend/state-mgmt/intro) - Choosing the right approach
-- [Testing Best Practices](https://docs.flutter.dev/testing/overview) - Unit, widget, integration tests
+- [Flutter Basics Course](https://docs.flutter.dev/get-started/learn-more) - Official beginner curriculum
+- [State Management Guide](https://docs.flutter.dev/data-and-backend/state-mgmt/intro) - Choosing the right approach
+- [Testing Best Practices](https://docs.flutter.dev/testing/overview) - Unit, widget, integration tests
 
 #### **State Management Alternatives**
 
-The app uses **watch_it**, but explore these popular options:
+The app uses **watch_it**, but explore these popular options:
 
 |Package|Best For|Learning Curve|Use Case|
 |---|---|---|---|
@@ -915,13 +916,13 @@ The app uses **watch_it**, but explore these popular options:
 |**[Provider](https://pub.dev/packages/provider)**|Simple apps|Low|Officially recommended by Flutter team|
 |**[GetX](https://pub.dev/packages/get)**|Rapid development|Low|All-in-one (routing, DI, state)|
 
-> **Recommendation:** Start with Provider for learning, graduate to Riverpod for production apps.
+> **Recommendation:** Start with Provider for learning, graduate to Riverpod for production apps.
 
 #### **Testing in Flutter**
 
 Production apps need comprehensive testing:
 
-**Unit Tests** (Fast, Isolated)
+**Unit Tests** (Fast, Isolated)
 
 ```dart
 test('selectLocation updates state', () {
@@ -931,7 +932,7 @@ test('selectLocation updates state', () {
 });
 ```
 
-**Widget Tests** (Medium Speed)
+**Widget Tests** (Medium Speed)
 
 ```dart
 testWidgets('Shows error message when API fails', (tester) async {
@@ -942,7 +943,7 @@ testWidgets('Shows error message when API fails', (tester) async {
 });
 ```
 
-**Integration Tests** (Slow, Comprehensive)
+**Integration Tests** (Slow, Comprehensive)
 
 ```dart
 testWidgets('Complete user flow', (tester) async {
@@ -954,16 +955,16 @@ testWidgets('Complete user flow', (tester) async {
 });
 ```
 
-> **Learn More:** [Flutter Testing Guide](https://docs.flutter.dev/testing)
+> **Learn More:** [Flutter Testing Guide](https://docs.flutter.dev/testing)
 
 #### **Community and Support**
 
-🤝 **Get Help:**
+🤝 **Get Help:**
 
 - [Stack Overflow (flutter tag)](https://stackoverflow.com/questions/tagged/flutter)
 - [Flutter Community Slack](https://fluttercommunity.dev/joinslack)
-- [r/FlutterDev](https://www.reddit.com/r/FlutterDev/) - Active Reddit community
-- [Flutter Discord](https://discord.gg/N7Yshp4) - Real-time chat
+- [r/FlutterDev](https://www.reddit.com/r/FlutterDev/) - Active Reddit community
+- [Flutter Discord](https://discord.gg/N7Yshp4) - Real-time chat
 
 ---
 ### When to Choose Flutter
