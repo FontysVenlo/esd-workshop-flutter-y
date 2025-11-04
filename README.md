@@ -52,10 +52,9 @@ Rather than building from scratch, you'll complete targeted features in an exist
 Before starting the workshop, ensure you have:
 
 ✅ **Docker installed** (run `docker version` to verify)  
-✅ **Flutter SDK installed** (run `flutter doctor` to verify)  
-✅ **IDE configured** (VS Code with Flutter extension OR IntelliJ with Flutter Extension)  
-✅ **Project dependencies installed** (run `flutter pub get` in project directory 'task')  
-✅ **App successfully runs** (test with `flutter run`)
+✅ **IDE configured** (VS Code with Dev Container extension)  
+✅ **Web browser installed** (Feel free to pick Firefox, Chrome, or something exotic and surprisisng)  
+✅ **App successfully runs** (`flutter run -d web-server --web-hostname 0.0.0.0 --web-port 3000`)
 
 > **Note:** If you encounter setup issues, refer to the [Official Flutter Installation Guide](https://docs.flutter.dev/get-started/install), or ask the referents of this workshop.
 
