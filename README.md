@@ -54,7 +54,7 @@ Before starting the workshop, ensure you have:
 ✅ **Docker installed** (run `docker version` to verify)  
 ✅ **IDE configured** (VS Code with Dev Container extension)  
 ✅ **Web browser installed** (Feel free to pick Firefox, Chrome, or something exotic and surprisisng)  
-◻️ **App successfully runs** (`flutter run -d web-server --web-hostname 0.0.0.0 --web-port 3000` --> You will need to complete the tasks to accomplish this)
+✅ **App successfully runs** (`flutter run -d web-server --web-hostname 0.0.0.0 --web-port 3000` --> You will need to complete the tasks to accomplish this)
 
 > **Note:** If you encounter setup issues, refer to the [Official Flutter Installation Guide](https://docs.flutter.dev/get-started/install), or ask the referents of this workshop.
 
@@ -240,10 +240,8 @@ void selectLocation(String name) {
 
 ### Success Criteria
 
-✅ Clicking different locations in the drawer updates the climate chart  
-✅ The location name in the AppBar changes  
-✅ The map marker moves to the new coordinates  
-✅ A loading spinner briefly appears while fetching data
+✅ The location name in the AppBar changes   
+✅ The map marker moves to the new coordinates
 
 ### Hints 💡
 
