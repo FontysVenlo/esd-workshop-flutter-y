@@ -1,7 +1,8 @@
+import 'package:climate_diagrams/ui/climate/widgets/legend_item.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
-import '../view_model/climate_view_model.dart';
+import 'package:climate_diagrams/ui/climate/view_model/climate_view_model.dart';
 import 'dart:math' as math;
 
 class ClimateDiagram extends StatelessWidget with WatchItMixin {
@@ -17,7 +18,6 @@ class ClimateDiagram extends StatelessWidget with WatchItMixin {
     final minTemp = data.temperature2mMin;
     final precip = data.precipitationSum;
 
-
     // TODO: Exercise 5
     // 1. Find maxPrecipitation: precip.reduce(math.max)
     // 2. Find maxTemperature: maxTemp.reduce(math.max)
@@ -27,20 +27,14 @@ class ClimateDiagram extends StatelessWidget with WatchItMixin {
     //    - If maxPrecipitation > 0: (tempRange * 0.8) / maxPrecipitation
     //    - Else: 1.0 (prevent division by zero)
 
-    final maxPrecipitation = 0.0; // Replace this
-    final precipScale = 1.0;      // Replace this
+    const maxPrecipitation = 0.0; // Replace this
+    const precipScale = 1.0; // Replace this
 
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: const BorderRadius.all(Radius.circular(12)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4))],
       ),
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(20),
@@ -52,11 +46,11 @@ class ClimateDiagram extends StatelessWidget with WatchItMixin {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildLegendItem('Max Temperature', Colors.red),
+                const LegendItem(label: 'Max Temperature', color: Colors.red),
                 const SizedBox(width: 24),
-                _buildLegendItem('Min Temperature', Colors.blue),
+                const LegendItem(label: 'Min Temperature', color: Colors.blue),
                 const SizedBox(width: 24),
-                _buildLegendItem('Precipitation', Colors.green.withOpacity(0.7)),
+                LegendItem(label: 'Precipitation', color: Colors.green.withOpacity(0.7)),
               ],
             ),
           ),
@@ -72,17 +66,13 @@ class ClimateDiagram extends StatelessWidget with WatchItMixin {
                     horizontalInterval: 10,
                     getDrawingHorizontalLine: (value) {
                       return FlLine(
-                        color: value == 0
-                            ? Colors.black54
-                            : Colors.grey.withOpacity(0.3),
+                        color: value == 0 ? Colors.black54 : Colors.grey.withOpacity(0.3),
                         strokeWidth: value == 0 ? 1 : 0.5,
                       );
                     },
                   ),
                   titlesData: FlTitlesData(
-                    topTitles: const AxisTitles(
-                      sideTitles: SideTitles(showTitles: false),
-                    ),
+                    topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
                     rightTitles: AxisTitles(
                       sideTitles: SideTitles(
                         showTitles: true,
@@ -94,10 +84,7 @@ class ClimateDiagram extends StatelessWidget with WatchItMixin {
 
                           return Text(
                             '${precipValue.toInt()} mm',
-                            style: const TextStyle(
-                              color: Colors.green,
-                              fontSize: 10,
-                            ),
+                            style: const TextStyle(color: Colors.green, fontSize: 10),
                           );
                         },
                       ),
@@ -108,13 +95,9 @@ class ClimateDiagram extends StatelessWidget with WatchItMixin {
                         interval: 10,
                         reservedSize: 42,
                         getTitlesWidget: (value, meta) {
-
                           return Text(
                             '${value.toInt()}°C',
-                            style: const TextStyle(
-                              color: Colors.black87,
-                              fontSize: 10,
-                            ),
+                            style: const TextStyle(color: Colors.black87, fontSize: 10),
                           );
                         },
                       ),
@@ -125,16 +108,11 @@ class ClimateDiagram extends StatelessWidget with WatchItMixin {
                         interval: 30,
                         getTitlesWidget: (value, meta) {
                           final index = value.toInt();
-                          if (index >= 0 &&
-                              index < data.time.length &&
-                              index % 30 == 0) {
+                          if (index >= 0 && index < data.time.length && index % 30 == 0) {
                             final date = data.time[index];
                             final parts = date.split('-');
 
-                            return Text(
-                              '${parts[2]}/${parts[1]}',
-                              style: const TextStyle(fontSize: 10),
-                            );
+                            return Text('${parts[2]}/${parts[1]}', style: const TextStyle(fontSize: 10));
                           }
 
                           return const Text('');
@@ -142,38 +120,24 @@ class ClimateDiagram extends StatelessWidget with WatchItMixin {
                       ),
                     ),
                   ),
-                  borderData: FlBorderData(
-                    show: true,
-                    border: Border.all(color: Colors.grey.withOpacity(0.5)),
-                  ),
+                  borderData: FlBorderData(show: true, border: Border.all(color: Colors.grey.withOpacity(0.5))),
                   minY: minTemperature - 5,
                   maxY: maxTemperature + 5,
                   lineBarsData: [
                     // Precipitation as bars (using stepped line to simulate bars)
                     LineChartBarData(
-                      spots: List.generate(
-                        precip.length,
-                            (i) => FlSpot(i.toDouble(), precip[i] * precipScale),
-                      ),
+                      spots: List.generate(precip.length, (i) => FlSpot(i.toDouble(), precip[i] * precipScale)),
                       isCurved: false,
                       isStepLineChart: true,
-                      lineChartStepData: const LineChartStepData(
-                        stepDirection: LineChartStepData.stepDirectionMiddle,
-                      ),
+                      lineChartStepData: const LineChartStepData(stepDirection: LineChartStepData.stepDirectionMiddle),
                       color: Colors.green.withOpacity(0.7),
                       barWidth: 0,
-                      belowBarData: BarAreaData(
-                        show: true,
-                        color: Colors.green.withOpacity(0.3),
-                      ),
+                      belowBarData: BarAreaData(show: true, color: Colors.green.withOpacity(0.3)),
                       dotData: const FlDotData(show: false),
                     ),
                     // Max Temperature
                     LineChartBarData(
-                      spots: List.generate(
-                        maxTemp.length,
-                            (i) => FlSpot(i.toDouble(), maxTemp[i]),
-                      ),
+                      spots: List.generate(maxTemp.length, (i) => FlSpot(i.toDouble(), maxTemp[i])),
                       isCurved: true,
                       curveSmoothness: 0.3,
                       color: Colors.red,
@@ -183,10 +147,7 @@ class ClimateDiagram extends StatelessWidget with WatchItMixin {
                     ),
                     // Min Temperature
                     LineChartBarData(
-                      spots: List.generate(
-                        minTemp.length,
-                            (i) => FlSpot(i.toDouble(), minTemp[i]),
-                      ),
+                      spots: List.generate(minTemp.length, (i) => FlSpot(i.toDouble(), minTemp[i])),
                       isCurved: true,
                       curveSmoothness: 0.3,
                       color: Colors.blue,
@@ -227,11 +188,7 @@ class ClimateDiagram extends StatelessWidget with WatchItMixin {
 
                             return LineTooltipItem(
                               '$label: $value\n${data.time[index]}',
-                              TextStyle(
-                                color: color,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 12,
-                              ),
+                              TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 12),
                             );
                           }
 
@@ -246,26 +203,6 @@ class ClimateDiagram extends StatelessWidget with WatchItMixin {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildLegendItem(String label, Color color) {
-    return Row(
-      children: [
-        Container(
-          width: 16,
-          height: 3,
-          color: color,
-        ),
-        const SizedBox(width: 8),
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 12,
-            color: Colors.black87,
-          ),
-        ),
-      ],
     );
   }
 }
