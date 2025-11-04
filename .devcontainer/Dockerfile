@@ -1,8 +1,5 @@
-# Use Ubuntu as base image
-FROM ubuntu:22.04
-
-# Avoid interactive prompts during package installation
-ENV DEBIAN_FRONTEND=noninteractive
+# Use Alpine as base image
+FROM alpine:3.22.2
 
 # Create a non-root user
 RUN useradd --create-home --shell /bin/bash vscode
