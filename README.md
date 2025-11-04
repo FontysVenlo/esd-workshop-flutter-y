@@ -54,7 +54,7 @@ Before starting the workshop, ensure you have:
 ✅ **Docker installed** (run `docker version` to verify)  
 ✅ **IDE configured** (VS Code with Dev Container extension)  
 ✅ **Web browser installed** (Feel free to pick Firefox, Chrome, or something exotic and surprisisng)  
-✅ **App successfully runs** (`flutter run -d web-server --web-hostname 0.0.0.0 --web-port 3000`)
+◻️ **App successfully runs** (`flutter run -d web-server --web-hostname 0.0.0.0 --web-port 3000` --> You will need to complete the tasks to accomplish this)
 
 > **Note:** If you encounter setup issues, refer to the [Official Flutter Installation Guide](https://docs.flutter.dev/get-started/install), or ask the referents of this workshop.
 
