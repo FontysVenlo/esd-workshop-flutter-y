@@ -3,10 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:watch_it/watch_it.dart';
 
-import '../../../domain/models/location.dart';
-import '../view_model/climate_view_model.dart';
-import 'climate_diagram.dart';
-import 'floating_map_widget.dart';
+import 'package:climate_diagrams/domain/models/location.dart';
+import 'package:climate_diagrams/ui/climate/view_model/climate_view_model.dart';
+import 'package:climate_diagrams/ui/climate/widgets/climate_diagram.dart';
+import 'package:climate_diagrams/ui/climate/widgets/floating_map_widget.dart';
 
 class ClimateScreen extends StatelessWidget with WatchItMixin {
   const ClimateScreen({super.key});
@@ -14,9 +14,7 @@ class ClimateScreen extends StatelessWidget with WatchItMixin {
   @override
   Widget build(BuildContext context) {
     // Only watch properties needed for AppBar and Drawer
-    final selectedLocation = watchPropertyValue(
-          (ClimateViewModel vm) => vm.selectedLocation,
-    );
+    final selectedLocation = watchPropertyValue((ClimateViewModel vm) => vm.selectedLocation);
     final locations = watchPropertyValue((ClimateViewModel vm) => vm.locations);
 
     return Scaffold(
@@ -48,10 +46,7 @@ class ClimateScreen extends StatelessWidget with WatchItMixin {
       drawerEdgeDragWidth: 60,
       drawerEnableOpenDragGesture: true,
       // Pre-built drawer
-      drawer: _LocationDrawer(
-        selectedLocation: selectedLocation,
-        locations: locations,
-      ),
+      drawer: _LocationDrawer(selectedLocation: selectedLocation, locations: locations),
       // Extracted body - only rebuilds when loading/error/data state changes
       body: const _ClimateBody(),
     );
@@ -72,42 +67,24 @@ class ClimateScreen extends StatelessWidget with WatchItMixin {
           children: [
             TextField(
               controller: nameController,
-              decoration: const InputDecoration(
-                labelText: 'Location Name',
-                hintText: 'e.g., London',
-              ),
+              decoration: const InputDecoration(labelText: 'Location Name', hintText: 'e.g., London'),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: latController,
-              decoration: const InputDecoration(
-                labelText: 'Latitude',
-                hintText: 'e.g., 51.5074',
-              ),
-              keyboardType: const TextInputType.numberWithOptions(
-                signed: true,
-                decimal: true,
-              ),
+              decoration: const InputDecoration(labelText: 'Latitude', hintText: 'e.g., 51.5074'),
+              keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: lonController,
-              decoration: const InputDecoration(
-                labelText: 'Longitude',
-                hintText: 'e.g., -0.1278',
-              ),
-              keyboardType: const TextInputType.numberWithOptions(
-                signed: true,
-                decimal: true,
-              ),
+              decoration: const InputDecoration(labelText: 'Longitude', hintText: 'e.g., -0.1278'),
+              keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
             ),
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
           ElevatedButton(
             onPressed: () {
               final name = nameController.text.trim();
@@ -137,10 +114,7 @@ class _LocationDrawer extends StatelessWidget {
   final String selectedLocation;
   final Map<String, Location> locations;
 
-  const _LocationDrawer({
-    required this.selectedLocation,
-    required this.locations,
-  });
+  const _LocationDrawer({required this.selectedLocation, required this.locations});
 
   @override
   Widget build(BuildContext context) {
@@ -157,16 +131,12 @@ class _LocationDrawer extends StatelessWidget {
         // Pre-calculate expensive properties
         child: CustomScrollView(
           // Use custom scroll view for better performance
-          physics: const BouncingScrollPhysics(
-            parent: AlwaysScrollableScrollPhysics(),
-          ),
+          physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
           slivers: [
             // Header as Sliver for better performance
             const SliverToBoxAdapter(
               child: DrawerHeader(
-                decoration: BoxDecoration(
-                  color: Color(0xFF283593),
-                ),
+                decoration: BoxDecoration(color: Color(0xFF283593)),
                 margin: EdgeInsets.zero,
                 padding: EdgeInsets.all(16),
                 child: Column(
@@ -177,11 +147,7 @@ class _LocationDrawer extends StatelessWidget {
                     SizedBox(height: 8),
                     Text(
                       'Select Location',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -189,49 +155,39 @@ class _LocationDrawer extends StatelessWidget {
             ),
             // Location list as Sliver for better scrolling performance
             SliverList(
-              delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                  final location = locationList[index];
-                  final isSelected = location == selectedLocation;
+              delegate: SliverChildBuilderDelegate((context, index) {
+                final location = locationList[index];
+                final isSelected = location == selectedLocation;
 
-                  return Material(
-                    color: isSelected ? const Color(0xFF283593) : Colors.transparent,
-                    child: InkWell(
-                      onTap: () {
-                        sl<ClimateViewModel>().selectLocation(location);
-                        Navigator.of(context).pop();
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.place,
-                              color: isSelected ? Colors.white : Colors.white70,
-                              size: 20,
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: Text(
-                                location,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-                                  fontSize: 15,
-                                ),
+                return Material(
+                  color: isSelected ? const Color(0xFF283593) : Colors.transparent,
+                  child: InkWell(
+                    onTap: () {
+                      sl<ClimateViewModel>().selectLocation(location);
+                      Navigator.of(context).pop();
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      child: Row(
+                        children: [
+                          Icon(Icons.place, color: isSelected ? Colors.white : Colors.white70, size: 20),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Text(
+                              location,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                                fontSize: 15,
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                  );
-                },
-                childCount: locationList.length,
-              ),
+                  ),
+                );
+              }, childCount: locationList.length),
             ),
           ],
         ),
@@ -256,8 +212,10 @@ class _ClimateBody extends StatelessWidget with WatchItMixin {
         // Main content
         Container(
           color: const Color(0xFF1a237e),
-          child: Center(
-              child: // TODO: Exercise 3
+          child: const Center(
+            child: Placeholder(),
+
+            // TODO: Exercise 3
             // Use nested ternary operators:
             // isLoading ? LoadingWidget : (errorMessage != null ? ErrorWidget : ...)
 
@@ -270,12 +228,7 @@ class _ClimateBody extends StatelessWidget with WatchItMixin {
           ),
         ),
         // Floating map widget
-        if (climateData != null && !isLoading)
-          const Positioned(
-            bottom: 16,
-            right: 16,
-            child: FloatingMapWidget(),
-          ),
+        if (climateData != null && !isLoading) const Positioned(bottom: 16, right: 16, child: FloatingMapWidget()),
       ],
     );
   }
@@ -295,42 +248,24 @@ class _ClimateBody extends StatelessWidget with WatchItMixin {
           children: [
             TextField(
               controller: nameController,
-              decoration: const InputDecoration(
-                labelText: 'Location Name',
-                hintText: 'e.g., London',
-              ),
+              decoration: const InputDecoration(labelText: 'Location Name', hintText: 'e.g., London'),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: latController,
-              decoration: const InputDecoration(
-                labelText: 'Latitude',
-                hintText: 'e.g., 51.5074',
-              ),
-              keyboardType: const TextInputType.numberWithOptions(
-                signed: true,
-                decimal: true,
-              ),
+              decoration: const InputDecoration(labelText: 'Latitude', hintText: 'e.g., 51.5074'),
+              keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
             ),
             const SizedBox(height: 16),
             TextField(
               controller: lonController,
-              decoration: const InputDecoration(
-                labelText: 'Longitude',
-                hintText: 'e.g., -0.1278',
-              ),
-              keyboardType: const TextInputType.numberWithOptions(
-                signed: true,
-                decimal: true,
-              ),
+              decoration: const InputDecoration(labelText: 'Longitude', hintText: 'e.g., -0.1278'),
+              keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
             ),
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
           ElevatedButton(
             onPressed: () {
               final name = nameController.text.trim();
@@ -342,11 +277,9 @@ class _ClimateBody extends StatelessWidget with WatchItMixin {
                   sl<ClimateViewModel>().addLocation(name, lat, lon);
                   Navigator.pop(context);
                 } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Invalid coordinates. Please check the values.'),
-                    ),
-                  );
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(const SnackBar(content: Text('Invalid coordinates. Please check the values.')));
                 }
               }
             },

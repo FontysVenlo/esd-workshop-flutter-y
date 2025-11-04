@@ -18,6 +18,9 @@ class ClimateDiagram extends StatelessWidget with WatchItMixin {
     final minTemp = data.temperature2mMin;
     final precip = data.precipitationSum;
 
+    const minTemperature = -70;
+    const maxTemperature = 100;
+
     // TODO: Exercise 5
     // 1. Find maxPrecipitation: precip.reduce(math.max)
     // 2. Find maxTemperature: maxTemp.reduce(math.max)
