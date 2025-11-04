@@ -17,16 +17,18 @@ class ClimateDiagram extends StatelessWidget with WatchItMixin {
     final minTemp = data.temperature2mMin;
     final precip = data.precipitationSum;
 
-    // Calculate scaling for precipitation to prevent overflow
-    final maxPrecipitation = precip.reduce(math.max);
-    final maxTemperature = maxTemp.reduce(math.max);
-    final minTemperature = minTemp.reduce(math.min);
 
-    // Dynamic scaling factor for precipitation
-    final tempRange = maxTemperature - minTemperature;
-    final precipScale = maxPrecipitation > 0
-        ? (tempRange * 0.8) / maxPrecipitation
-        : 1.0;
+    // TODO: Exercise 5
+    // 1. Find maxPrecipitation: precip.reduce(math.max)
+    // 2. Find maxTemperature: maxTemp.reduce(math.max)
+    // 3. Find minTemperature: minTemp.reduce(math.min)
+    // 4. Calculate tempRange = maxTemperature - minTemperature
+    // 5. Calculate precipScale:
+    //    - If maxPrecipitation > 0: (tempRange * 0.8) / maxPrecipitation
+    //    - Else: 1.0 (prevent division by zero)
+
+    final maxPrecipitation = 0.0; // Replace this
+    final precipScale = 1.0;      // Replace this
 
     return Container(
       decoration: BoxDecoration(

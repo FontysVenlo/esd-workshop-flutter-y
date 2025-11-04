@@ -115,16 +115,13 @@ class ClimateScreen extends StatelessWidget with WatchItMixin {
               final lon = double.tryParse(lonController.text);
 
               if (name.isNotEmpty && lat != null && lon != null) {
-                if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
-                  sl<ClimateViewModel>().addLocation(name, lat, lon);
-                  Navigator.pop(context);
-                } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Invalid coordinates. Please check the values.'),
-                    ),
-                  );
-                }
+                // TODO: Exercise 4 - Add coordinate validation
+                // Check: lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180
+                // If valid: call addLocation and close dialog
+                // If invalid: show SnackBar with error message
+
+                sl<ClimateViewModel>().addLocation(name, lat, lon);
+                Navigator.pop(context);
               }
             },
             child: const Text('Add Location'),
@@ -260,19 +257,16 @@ class _ClimateBody extends StatelessWidget with WatchItMixin {
         Container(
           color: const Color(0xFF1a237e),
           child: Center(
-            child: isLoading
-                ? const CircularProgressIndicator(color: Colors.white)
-                : errorMessage != null
-                ? Text(
-              errorMessage,
-              style: const TextStyle(color: Colors.white),
-            )
-                : climateData != null
-                ? const ClimateDiagram()
-                : const Text(
-              'Select a location to view climate data',
-              style: TextStyle(color: Colors.white70),
-            ),
+              child: // TODO: Exercise 3
+            // Use nested ternary operators:
+            // isLoading ? LoadingWidget : (errorMessage != null ? ErrorWidget : ...)
+
+            // Widget templates:
+            // Loading: const CircularProgressIndicator(color: Colors.white)
+            // Error: Text(errorMessage, style: const TextStyle(color: Colors.white))
+            // Success: const ClimateDiagram()
+            // Empty: const Text('Select a location to view climate data',
+            //                    style: TextStyle(color: Colors.white70))
           ),
         ),
         // Floating map widget

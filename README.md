@@ -216,7 +216,7 @@ notifyListeners() → ClimateScreen rebuilds → Shows Berlin weather
 
 ### Your Task
 
-Implement the `selectLocation` method that's currently a comment at **line 48**.
+Implement the `selectLocation` method that's currently a comment at **line 47**.
 
 ### Requirements
 
@@ -309,7 +309,7 @@ The `match()` method safely handles both cases without try-catch blocks.
 
 ### Your Task
 
-Complete the error handling in the `fetchClimateData()` method at **lines 63-72**.
+Complete the error handling in the `fetchClimateData()` method at **line 67**.
 
 ### Requirements
 
@@ -444,7 +444,7 @@ child: isLoading ? Spinner() : Chart()
 
 ### Your Task
 
-Implement the conditional rendering logic in `_ClimateBody.build()` starting at **line 185**.
+Implement the conditional rendering logic in `_ClimateBody.build()` starting at **line 260**.
 
 ### Requirements
 
@@ -543,19 +543,6 @@ child: Center(
 - `Center` widget doesn't rebuild - only its child changes
 - Conditional rendering prevents unnecessary widget creation
 
-**Readability Tip:** Some developers prefer extracting this to a separate method:
-
-```dart
-Widget _buildContent() {
-  if (isLoading) return const CircularProgressIndicator(...);
-  if (errorMessage != null) return Text(errorMessage, ...);
-  if (climateData != null) return const ClimateDiagram();
-  return const Text('Select a location...', ...);
-}
-```
-
-Both approaches are valid - ternaries are more concise, if-statements are more explicit.
-
 ---
 
 ## Exercise 4: Add Location Input Validation (Optional)
@@ -584,7 +571,7 @@ Currently, the "Add Location" dialog accepts any coordinate values. This causes 
 
 ### Your Task
 
-Add validation to `_showAddLocationDialog` before calling `addLocation()` at **lines starting at 73**.
+Add validation to `_showAddLocationDialog` before calling `addLocation()` at **lines starting at 118**.
 
 ### Requirements
 
@@ -725,7 +712,7 @@ Precip value of 50mm displays as: 50 * 0.48 = 24 chart units
 
 ### Your Task
 
-Calculate the scaling factor for precipitation data starting at **line 16**.
+Calculate the scaling factor for precipitation data starting at **line 21**.
 
 ### Requirements
 
@@ -806,7 +793,7 @@ final precipScale = maxPrecipitation > 0
 
 **How It's Used in the Chart:**
 
-**Displaying Precipitation (lines 134-149):**
+**Displaying Precipitation:**
 
 ```dart
 LineChartBarData(
@@ -818,7 +805,7 @@ LineChartBarData(
 ),
 ```
 
-**Tooltip Labels (lines 189-192):**
+**Tooltip Labels:**
 
 ```dart
 if (touchedSpot.barIndex == 0) {
@@ -828,7 +815,7 @@ if (touchedSpot.barIndex == 0) {
 }
 ```
 
-**Right Y-Axis Labels (lines 73-84):**
+**Right Y-Axis Labels:**
 
 ```dart
 getTitlesWidget: (value, meta) {

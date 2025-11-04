@@ -44,11 +44,11 @@ class ClimateViewModel extends SafeChangeNotifier {
   }
 
   void selectLocation(String name) {
-    if (_locations.containsKey(name)) {
-      _selectedLocation = name;
-      fetchClimateData();
-      notifyListeners();
-    }
+    // TODO: Exercise 1
+    // 1. Check if location exists: _locations.containsKey(name)
+    // 2. Update _selectedLocation = name
+    // 3. Call fetchClimateData()
+    // 4. Call notifyListeners()
   }
 
   Future<void> fetchClimateData() async {
@@ -64,13 +64,15 @@ class ClimateViewModel extends SafeChangeNotifier {
     final result = await _climateRepository.getWeather(location.latitude, location.longitude);
 
     result.match(
-      (error) {
-        _errorMessage = error;
-        _climateData = null;
+          (error) {
+        // TODO: Exercise 2a - Handle error case
+        // Set _errorMessage = error
+        // Set _climateData = null
       },
-      (data) {
-        _climateData = data;
-        _errorMessage = null;
+          (data) {
+        // TODO: Exercise 2b - Handle success case
+        // Set _climateData = data
+        // Set _errorMessage = null
       },
     );
 
