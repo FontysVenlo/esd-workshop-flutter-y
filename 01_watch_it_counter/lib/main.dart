@@ -11,11 +11,12 @@ void setup() {
   sl.registerSingleton<CounterModel>(CounterModel());
 }
 
-class CounterModel {
-  final count = ValueNotifier<int>(0);
+class CounterModel extends ChangeNotifier {
+  var count = 0;
 
   void increment() {
-    count.value++;
+    count++;
+    notifyListeners();
   }
 }
 
@@ -39,11 +40,19 @@ class MyHomePage extends StatelessWidget with WatchItMixin {
 
   @override
   Widget build(BuildContext context) {
-    final count = watchValue((CounterModel m) => m.count);
+    final count = watchPropertyValue((CounterModel m) => m.count);
 
     return Scaffold(
       appBar: AppBar(backgroundColor: Theme.of(context).colorScheme.inversePrimary, title: Text(title)),
-      body: Center(child: Text('Count: $count')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Text('You have pushed the button this many times:'),
+            Text('$count', style: Theme.of(context).textTheme.headlineMedium),
+          ],
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => sl<CounterModel>().increment(),
         tooltip: 'Increment',

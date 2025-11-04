@@ -59,7 +59,12 @@
   #block(text(size: 0.65em)[
     #table(
       columns: 6,
-      [*Category*], [*Flutter* @flutter], [*Electron JS* ], [*Tauri* ], [*Kotlin Multiplatform* @kmp], [*Native*],
+      [*Category*],
+      [*Flutter* @flutter],
+      [*Electron JS* @electronjs],
+      [*Tauri* @tauri],
+      [*Kotlin Multiplatform* @kmp],
+      [*Native*],
 
       [*Cross-Platform*], [Yes], [Yes], [Yes], [Yes], [No],
 
@@ -77,7 +82,6 @@
       [*Ecosystem Maturity*], [Growing], [Mature], [Emerging], [Emerging], [Mature],
     )
   ])
-
 ]
 
 #slide[
@@ -99,18 +103,38 @@
 
 #slide[
   = Counter Example
+
+  - Widgets
+  - Stateful vs. Stateless
 ]
 
 #slide[
   = Refactored Counter Example
+
+  - ServiceLocator Pattern
+  - ValueNotifier
+  - watch_it
 ]
 
 #slide[
   = Exercise
+
+  1. Location Selection
+  2. Error Handling
+  3. Conditional UI
+  4. Input Validation _(optional)_
+  5. Data Scaling _(optional)_
+
+  Please refer to the README.md in the exercise repository for detailed instructions.
 ]
 
 #slide[
   = Where to go from here?
+
+  - Official Documentation: https://flutter.dev/docs
+  - Flutter YouTube Channel: https://www.youtube.com/flutterdev
+  - Dart Programming Language: https://dart.dev/guides
+  - Flutter Packages: https://pub.dev/
 ]
 
 #slide[
