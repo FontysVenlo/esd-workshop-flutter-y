@@ -60,7 +60,7 @@ Before starting the workshop, ensure you have:
 
 ---
 
-## **Part 1: Overview
+## **Part 1: Overview**
 
 ### 1. What is Flutter?
 
