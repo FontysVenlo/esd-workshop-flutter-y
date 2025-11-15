@@ -1,6 +1,8 @@
 # Flutter Workshop
+##### _by Timo Schroeder und Simon Vegelahn_
 
 Welcome to the **Flutter Workshop**, which is designed to guide you through enterprise Flutter development with hands-on learning and practical exercises. By the end of this workshop, you'll understand core Flutter patterns and be ready to (learn more about) build(ing) production-ready applications.
+
 
 ---
 
@@ -29,8 +31,8 @@ Welcome to the **Flutter Workshop**, which is designed to guide you through ente
 
 This workshop is structured as:
 
-- **Presentation**: TODO minutes
-- **Hands-on Exercises**: TODO minutes (3 core exercises + 2 optional extensions)
+- **Presentation**
+- **Hands-on Exercises**: 3 core exercises + 2 optional extensions
 
 ### What You'll Build
 
@@ -175,13 +177,13 @@ Benefits: Loose coupling, easier testing, centralized configuration.
 
 Each exercise teaches a core Flutter pattern by implementing a missing feature:
 
-| Exercise                  | Time     | Difficulty | Concepts                                         |
-| ------------------------- | -------- | ---------- | ------------------------------------------------ |
-| **1. Location Selection** | TODO min | **         | State updates, side effects, Map data structures |
-| **2. Error Handling**     | TODO min | ***        | Either monad, pattern matching, error states     |
-| **3. Conditional UI**     | TODO min | ***        | Ternary operators, null safety, loading states   |
-| **4. Input Validation**   | TODO min | **         | Form validation, user feedback, SnackBars        |
-| **5. Data Scaling**       | TODO min | ****       | List operations, mathematical transformations    |
+| Exercise                  | Difficulty | Concepts                                         |
+| ------------------------- | ---------- | ------------------------------------------------ |
+| **1. Location Selection** | **         | State updates, side effects, Map data structures |
+| **2. Error Handling**     | ***        | Either monad, pattern matching, error states     |
+| **3. Conditional UI**     | ***        | Ternary operators, null safety, loading states   |
+| **4. Input Validation**   | **         | Form validation, user feedback, SnackBars        |
+| **5. Data Scaling**       | ****       | List operations, mathematical transformations    |
 
 > **Tip:** Complete exercises in order. Each builds on concepts from the previous one.
 
