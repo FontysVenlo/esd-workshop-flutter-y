@@ -35,7 +35,7 @@ RUN wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add
     && rm -rf /var/lib/apt/lists/*
 
 # Set Flutter version
-ENV FLUTTER_VERSION=3.24.3
+ENV FLUTTER_VERSION=3.38.1
 ENV FLUTTER_HOME=/home/vscode/flutter
 ENV PATH="$FLUTTER_HOME/bin:$PATH"
 
